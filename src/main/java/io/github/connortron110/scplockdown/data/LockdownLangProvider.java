@@ -31,6 +31,7 @@ public class LockdownLangProvider extends LanguageProvider {
 		super(output, SCPLockdown.MOD_ID, "en_us");
 	}
 
+	//	TODO: Standardize Lang stuff, as most things are currently all over the place
 	@Override
 	protected void addTranslations() {
 		/*Custom Messages*/
@@ -52,7 +53,8 @@ public class LockdownLangProvider extends LanguageProvider {
 			add(LockdownTextComponents.BLAST_DOOR_TOO_HIGH, "Blast Door is to High to place!");
 
 			add(LockdownTextComponents.SCREWDRIVER_HAS_TAG, "Screwdriver already has tag!");
-			add(LockdownTextComponents.SCREWDRIVER_TAGS_CLEAR, "Cleared Tags from Screwdriver!");
+			add(LockdownTextComponents.SCREWDRIVER_TAGS_CLEAR, "Cleared Tags from Screwdriver.");
+			add(LockdownTextComponents.SCREWDRIVER_TAGS_EMPTY, "Screwdriver has no Tags!");
 
 			add(LockdownTextComponents.SCP023_LOOKED_AT, "Upon witnessing SCP-023 Eyes, you feel a sense of dread. The worst is yet to come...");
 

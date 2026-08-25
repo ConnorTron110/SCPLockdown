@@ -10,6 +10,7 @@ public abstract class LockdownTextComponents {
 
 	public static final MutableComponent SCREWDRIVER_HAS_TAG = Component.translatable("scplockdown.screwdriver.hastag");
 	public static final MutableComponent SCREWDRIVER_TAGS_CLEAR = Component.translatable("scplockdown.screwdriver.cleartags");
+	public static final MutableComponent SCREWDRIVER_TAGS_EMPTY = Component.translatable("scplockdown.screwdriver.empty");
 
 	public static final MutableComponent SCP023_LOOKED_AT = Component.translatable("scplockdown.scp023.stare").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_RED);
 

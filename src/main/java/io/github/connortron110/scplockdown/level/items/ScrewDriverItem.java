@@ -22,8 +22,12 @@ public class ScrewDriverItem extends Item {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 		if (pPlayer.isCrouching()) {
-			pPlayer.getItemInHand(pUsedHand).setTag(this.getDefaultInstance().getOrCreateTag());
-			pPlayer.displayClientMessage(LockdownTextComponents.SCREWDRIVER_TAGS_CLEAR, true);
+			if (pPlayer.getItemInHand(pUsedHand).getOrCreateTag().isEmpty()) {
+				pPlayer.displayClientMessage(LockdownTextComponents.SCREWDRIVER_TAGS_EMPTY, true);
+			} else {
+				pPlayer.getItemInHand(pUsedHand).setTag(this.getDefaultInstance().getOrCreateTag());
+				pPlayer.displayClientMessage(LockdownTextComponents.SCREWDRIVER_TAGS_CLEAR, true);
+			}
 		}
 		return super.use(pLevel, pPlayer, pUsedHand);
 	}
