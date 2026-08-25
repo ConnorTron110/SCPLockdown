@@ -1,0 +1,45 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "scplockdown:block/ceiling_lamp_body",
+		"1": "scplockdown:block/table_top",
+		"particle": "scplockdown:block/ceiling_lamp_body"
+	},
+	"elements": [
+		{
+			"from": [7, 2, 7],
+			"to": [9, 3, 9],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [6, 0, 6],
+			"to": [10, 2, 10],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 1, 2, 0], "texture": "#0"},
+				"east": {"uv": [0, 1, 2, 0], "texture": "#0"},
+				"south": {"uv": [0, 1, 2, 0], "texture": "#0"},
+				"west": {"uv": [0, 1, 2, 0], "texture": "#0"},
+				"up": {"uv": [0, 1, 2, 0], "texture": "#0"},
+				"down": {"uv": [0, 1, 2, 0], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

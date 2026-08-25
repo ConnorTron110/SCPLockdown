@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "package": "io.github.connortron110.scplockdown.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "client.ClientMixinItem"
+  ],
+  "server": [
+  ],
+  "mixins": [
+    "MixinEntity",
+    "MixinLivingEntity",
+    "MixinMobEffectInstance",
+    "MixinMobEntity",
+    "MixinServerWorld",
+    "NaturalSpawnerAccessor",
+    "data.MixinLootTableProvider"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "mixins.scplockdown.refmap.json"
+}

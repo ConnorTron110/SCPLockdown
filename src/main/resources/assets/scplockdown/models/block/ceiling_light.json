@@ -1,0 +1,35 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"bars": "scplockdown:block/ceiling_light_bars",
+		"fixture": "scplockdown:block/ceiling_light_fixture",
+		"particle": "scplockdown:block/ceiling_light_bars"
+	},
+	"elements": [
+		{
+			"from": [0, 15, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 15.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 1], "texture": "#fixture"},
+				"east": {"uv": [0, 0, 16, 1], "texture": "#fixture"},
+				"south": {"uv": [0, 0, 16, 1], "texture": "#fixture"},
+				"west": {"uv": [0, 0, 16, 1], "texture": "#fixture"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#fixture"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#fixture"}
+			}
+		},
+		{
+			"from": [1, 14, 1],
+			"to": [15, 15, 15],
+			"faces": {
+				"north": {"uv": [0, 13, 14, 14], "texture": "#bars"},
+				"east": {"uv": [0, 0, 1, 14], "rotation": 90, "texture": "#bars"},
+				"south": {"uv": [0, 0, 14, 1], "texture": "#bars"},
+				"west": {"uv": [13, 0, 14, 14], "rotation": 90, "texture": "#bars"},
+				"down": {"uv": [0, 0, 14, 14], "texture": "#bars"}
+			}
+		}
+	]
+}

@@ -1,0 +1,239 @@
+[24Aug2026 18:46:19.968] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgedatauserdev, --assetIndex, 5, --assetsDir, /home/keppel/.gradle/caches/forge_gradle/assets, --gameDir, ., --fml.forgeVersion, 47.4.23, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mod, scplockdown, --all, --output, /home/keppel/Desktop/SCP Lockdown/Code/SCPLockdown/src/generated/resources, --existing, /home/keppel/Desktop/SCP Lockdown/Code/SCPLockdown/src/main/resources, --mixin.config, mixins.scplockdown.json]
+[24Aug2026 18:46:19.971] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.19 by Arch Linux; OS Linux arch amd64 version 7.2.0-1-cachyos
+[24Aug2026 18:46:20.030] [main/WARN] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Configuration file /home/keppel/Desktop/SCP Lockdown/Code/SCPLockdown/run-data/config/fml.toml is not correct. Correcting
+[24Aug2026 18:46:20.031] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[24Aug2026 18:46:20.031] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowLogHelpMessage] was corrected from null to true
+[24Aug2026 18:46:20.032] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[24Aug2026 18:46:20.032] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[24Aug2026 18:46:20.041] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgedatauserdev
+[24Aug2026 18:46:20.068] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/keppel/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=CLIENT
+[24Aug2026 18:46:20.229] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/keppel/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.23/103ee0ecf6e5e4a971ee1ae68384e96fd73b097f/javafmllanguage-1.20.1-47.4.23.jar is missing mods.toml file
+[24Aug2026 18:46:20.230] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/keppel/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.23/2531b2da1460bc09c8ec3bf946e641de664b460d/lowcodelanguage-1.20.1-47.4.23.jar is missing mods.toml file
+[24Aug2026 18:46:20.230] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/keppel/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.23/eebf4eae01f6fde63717bb38b77f9b6b1b50f8/mclanguage-1.20.1-47.4.23.jar is missing mods.toml file
+[24Aug2026 18:46:20.231] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/keppel/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.23/ef56cfb608a4356c3f99dd6a4fa81ce33029bcde/fmlcore-1.20.1-47.4.23.jar is missing mods.toml file
+[24Aug2026 18:46:20.306] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 1 dependencies adding them to mods collection
+[24Aug2026 18:46:21.126] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[24Aug2026 18:46:21.126] [main/ERROR] [mixin/]: Mixin config mixins.scplockdown.json does not specify "minVersion" property
+[24Aug2026 18:46:21.131] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgedatauserdev' with arguments [--gameDir, ., --assetsDir, /home/keppel/.gradle/caches/forge_gradle/assets, --assetIndex, 5, --mod, scplockdown, --all, --output, /home/keppel/Desktop/SCP Lockdown/Code/SCPLockdown/src/generated/resources, --existing, /home/keppel/Desktop/SCP Lockdown/Code/SCPLockdown/src/main/resources]
+[24Aug2026 18:46:21.156] [main/WARN] [mixin/]: Reference map 'mixins.scplockdown.refmap.json' for mixins.scplockdown.json could not be read. If this is a development environment you can ignore this message
+[24Aug2026 18:46:21.615] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [scplockdown]
+[24Aug2026 18:46:21.697] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[24Aug2026 18:46:23.901] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.23, for MC 1.20.1 with MCP 20230612.114412
+[24Aug2026 18:46:23.903] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.4.23 Initialized
+[24Aug2026 18:46:24.699] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/keppel/Desktop/SCP%20Lockdown/Code/SCPLockdown/build/fg_cache/net/minecraftforge/forge/1.20.1-47.4.23_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.4.23_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[24Aug2026 18:46:24.699] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/keppel/Desktop/SCP%20Lockdown/Code/SCPLockdown/build/fg_cache/net/minecraftforge/forge/1.20.1-47.4.23_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.4.23_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[24Aug2026 18:46:24.818] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Block States: scplockdown
+[24Aug2026 18:46:24.997] [main/INFO] [net.minecraft.data.DataGenerator/]: Block States: scplockdown finished after 178 ms
+[24Aug2026 18:46:24.997] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: scplockdown
+[24Aug2026 18:46:25.023] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: scplockdown finished after 25 ms
+[24Aug2026 18:46:25.023] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Languages: en_us
+[24Aug2026 18:46:25.037] [main/INFO] [net.minecraft.data.DataGenerator/]: Languages: en_us finished after 13 ms
+[24Aug2026 18:46:25.037] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Sound Definitions
+[24Aug2026 18:46:25.040] [main/INFO] [net.minecraft.data.DataGenerator/]: Sound Definitions finished after 2 ms
+[24Aug2026 18:46:25.040] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Registries
+[24Aug2026 18:46:25.049] [main/INFO] [net.minecraft.data.DataGenerator/]: Registries finished after 9 ms
+[24Aug2026 18:46:25.049] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id scplockdown
+[24Aug2026 18:46:25.054] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id scplockdown finished after 5 ms
+[24Aug2026 18:46:25.055] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id scplockdown
+[24Aug2026 18:46:25.056] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id scplockdown finished after 1 ms
+[24Aug2026 18:46:25.056] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:entity_type mod id scplockdown
+[24Aug2026 18:46:25.058] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:entity_type mod id scplockdown finished after 1 ms
+[24Aug2026 18:46:25.058] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:fluid mod id scplockdown
+[24Aug2026 18:46:25.058] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:fluid mod id scplockdown finished after 0 ms
+[24Aug2026 18:46:25.058] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:damage_type mod id scplockdown
+[24Aug2026 18:46:25.058] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:damage_type mod id scplockdown finished after 0 ms
+[24Aug2026 18:46:25.058] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Loot Tables
+[24Aug2026 18:46:25.105] [main/INFO] [net.minecraft.data.DataGenerator/]: Loot Tables finished after 46 ms
+[24Aug2026 18:46:25.105] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Recipes
+[24Aug2026 18:46:25.105] [main/INFO] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Generating Recipes and report missing
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_cyan
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_iron_stairs
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_wall_c_wall
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp063
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_brown
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:terracotta_slab
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_metal
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:pink_terracotta_stairs
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:black_terracotta_wall
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_wall_b_wall
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:cyan_terracotta_slab
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_sublevel_wall_c
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_sublevel_wall_b
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp914_gears
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_sublevel_wall_a
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:syringe
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:pink_terracotta_wall
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:magnetized_door
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:hazard
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp143_leaves
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:blast_door
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:locker
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:light_gray_terracotta_stairs
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:terracotta_stairs
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:white_terracotta_wall
+[24Aug2026 18:46:25.121] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_silver
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_lime
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:sublevel_slab
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:exterior_bottom_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_sublevel_slab
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_floor_a
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_floor_b
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_sublevel_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:quartz_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_purple
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:light_gray_terracotta_slab
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:purple_terracotta_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_table
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_magenta
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:smooth_quartz_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_wall_a_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:sublevel_wall_b
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:sublevel_wall_c
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:blue_terracotta_stairs
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:pipe_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_light_blue
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:green_terracotta_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_sublevel_slab
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_arm_chair
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:yellow_terracotta_slab
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp902
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:pizza
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:putrid_flesh
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:magenta_terracotta_stairs
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:green_candy
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp914
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:toilet
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_iron_slab
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:orange_candy
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:vial
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:green_terracotta_stairs
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:magenta_terracotta_slab
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:red_terracotta_slab
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:light_blue_terracotta_wall
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:burnt_bone
+[24Aug2026 18:46:25.122] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_quartz
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:screwdriver
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp939
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:orange_terracotta_slab
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:brown_terracotta_slab
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:green_terracotta_slab
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_orange
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:blue_terracotta_wall
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_door
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp822
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:ash
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:steel_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_red
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:brown_terracotta_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:mouse
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:lime_terracotta_wall
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp914_metal
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:cyan_terracotta_wall
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_gray
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:lime_terracotta_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:red_terracotta_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:white_terracotta_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:gray_terracotta_slab
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp143_log
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:steel_slab
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:black_terracotta_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_white
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp008_guard
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp500
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:lime_terracotta_slab
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp015_block
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_plant_pot
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:smooth_stone_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:sublevel_wall
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:pipe_wall_wall
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_flesh_d
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_flesh_c
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_flesh_b
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_flesh_a
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:card_writer
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:red_candy
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:plaster_wall
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:yellow_terracotta_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:steel_wall
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp143_sapling
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_lamp
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:orange_terracotta_stairs
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:polished_andesite_wall
+[24Aug2026 18:46:25.123] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:polished_diorite_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_coffee_table
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:keycard
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_panel_c
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_panel_b
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:pink_terracotta_slab
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_granite
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:yellow_candy
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:terracotta_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:wood_crate
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_iron_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:light_blue_terracotta_slab
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_pink
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp143_petals
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:blue_candy
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:dark_wood_crate
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:exterior_middle_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:white_terracotta_slab
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp458
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp035_mask
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_sublevel_stairs
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp330
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_yellow
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:stone_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_black
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp148_ore
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp109
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:orange_terracotta_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:brown_terracotta_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp035_glass_case
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:magenta_terracotta_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:polished_granite_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_blue
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:light_gray_terracotta_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:gray_terracotta_stairs
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_wall_a_slab
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp005
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:green_panel_d
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp009
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:sublevel_stairs
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:purple_terracotta_stairs
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:reinforced_sublevel_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp124
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:purple_terracotta_slab
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp002_tv
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:exterior_top_wall
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:green_panel_b
+[24Aug2026 18:46:25.124] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:green_panel_c
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:rat
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:green_panel_a
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_sublevel_stairs
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:gray_terracotta_wall
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp019
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp015
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp012
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:light_blue_terracotta_stairs
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp023
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp019_monster
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_wall_a_stairs
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:guard
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_wall_a
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:cyan_terracotta_stairs
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:metal_wall_b
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:scp049
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:black_terracotta_slab
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:rodent_tail
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:steel_floor
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:red_terracotta_wall
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:blue_terracotta_slab
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:straight_pipe_green
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:purple_candy
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing Recipe for scplockdown:yellow_terracotta_wall
+[24Aug2026 18:46:25.125] [main/WARN] [io.github.connortron110.scplockdown.SCPLockdown/LockdownRecipeProvider]: Missing 185 total amount of Recipes
+[24Aug2026 18:46:25.125] [main/INFO] [net.minecraft.data.DataGenerator/]: Recipes finished after 20 ms
+[24Aug2026 18:46:25.125] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Advancements
+[24Aug2026 18:46:25.155] [main/INFO] [net.minecraft.data.DataGenerator/]: Advancements finished after 29 ms
+[24Aug2026 18:46:25.155] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 337 ms
+[24Aug2026 18:46:25.172] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 1664, old count: 0, new count: 1665, removed stale: 0, written: 1664
