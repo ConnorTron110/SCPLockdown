@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import org.joml.AxisAngle4d;
@@ -58,6 +59,7 @@ public class SlidingDoorRenderer implements BlockEntityRenderer<SlidingDoorBlock
 		if (axis == Direction.Axis.X) pPoseStack.mulPose(AXIS_SWAP);
 		if (hinge == DoorHingeSide.RIGHT) pPoseStack.mulPose(HINGE_FLIP);
 		float position = (pBlockEntity.getOpenProgress()) * 1F / (SlidingDoorBlockEntity.MAX_OPEN);
+		position = Mth.clamp(position, 0, 0.99F);	//	Clamp the door so it doesn't clip into the neighboring block
 		pPoseStack.translate(position, 0, 0);
 		this.doorModel.renderToBuffer(pPoseStack, renderMaterial.buffer(pBuffer, RenderType::entitySolid), pPackedLight, pPackedOverlay, 1, 1, 1, 1);
 		pPoseStack.popPose();
