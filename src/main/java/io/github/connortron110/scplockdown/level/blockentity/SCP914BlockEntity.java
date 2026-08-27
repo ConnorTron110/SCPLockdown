@@ -206,14 +206,17 @@ public class SCP914BlockEntity extends BlockEntity {
 	/**
 	 * Attempt to link a given door to 914.
 	 *
-	 * @param doorPos The position of the door we are linking
+	 * @param doorPos The position of the door we are linking, either top or bottom half.
 	 * @return True if successfully linked. False otherwise.
 	 */
 	public boolean linkDoor(BlockPos doorPos) {
-		//	Test if the position is valid (it points to a block entity of sliding door (the bottom half))
-		if (!(this.level.getBlockEntity(doorPos) instanceof SlidingDoorBlockEntity)) {
-			return false;
-		}
+		//	First, test if the given position is actually a door
+		if (!(level.getBlockState(doorPos).getBlock() instanceof SlidingDoorBlock)) return false;
+
+		//	To ensure we get the correct position of the door with the block entity, we can use a function within SlidingDoorBlock to get the block entity itself
+		SlidingDoorBlockEntity slidingDoorBlockEntity = SlidingDoorBlock.getSlidingDoorEntity(level, doorPos, level.getBlockState(doorPos));
+		if (slidingDoorBlockEntity == null) return false;
+		doorPos = slidingDoorBlockEntity.getBlockPos();
 
 		//	If we have no input door, link it to that first
 		if (this.InputDoorLocation == null) {
@@ -233,6 +236,7 @@ public class SCP914BlockEntity extends BlockEntity {
 			return true;
 		}
 
+		//	If none of the checks above passed, what are we doing here?
 		return false;
 	}
 
