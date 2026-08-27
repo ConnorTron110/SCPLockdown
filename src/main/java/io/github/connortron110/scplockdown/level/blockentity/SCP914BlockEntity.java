@@ -186,20 +186,20 @@ public class SCP914BlockEntity extends BlockEntity {
 			return false;
 		}
 
-		//	If input is not valid, link it to that
-		if (!isInputDoorValid()) {
+		//	If we have no input door, link it to that first
+		if (this.InputDoorLocation == null) {
 			this.InputDoorLocation = doorPos;
 			this.InputBBox = new AABB(doorPos);
-			configureDoor(doorPos, false);
+			slidingDoorBlockEntity.linkSCP914(this.getBlockPos());
 			setDoorOpen(doorPos, true);
 			return true;
 		}
 
-		//	If output is not valid, link it to that
-		if (!isOutputDoorValid()) {
+		//	If we have no output door, link it to that
+		if (this.OutputDoorLocation == null) {
 			this.OutputDoorLocation = doorPos;
 			this.OutputBBox = new AABB(doorPos);
-			configureDoor(doorPos, false);
+			slidingDoorBlockEntity.linkSCP914(this.getBlockPos());
 			setDoorOpen(doorPos, true);
 			return true;
 		}
@@ -256,10 +256,10 @@ public class SCP914BlockEntity extends BlockEntity {
 
 	@Override
 	public void setRemoved() {
-		configureDoor(InputDoorLocation, true);
-		configureDoor(OutputDoorLocation, true);
-		setDoorOpen(InputDoorLocation, false);
-		setDoorOpen(OutputDoorLocation, false);
+		if (InputDoorLocation != null && level.getBlockEntity(InputDoorLocation) instanceof SlidingDoorBlockEntity inputDoorBlockEntity)
+			inputDoorBlockEntity.unlinkSCP914();
+		if (OutputDoorLocation != null && level.getBlockEntity(OutputDoorLocation) instanceof SlidingDoorBlockEntity outputDoorBlockEntity)
+			outputDoorBlockEntity.unlinkSCP914();
 		super.setRemoved();
 	}
 

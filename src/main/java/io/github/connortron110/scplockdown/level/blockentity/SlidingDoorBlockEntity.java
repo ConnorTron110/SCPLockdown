@@ -1,8 +1,6 @@
 package io.github.connortron110.scplockdown.level.blockentity;
 
 import com.google.common.collect.Lists;
-import io.github.connortron110.scplockdown.level.blocks.IScrewdriverInteraction;
-import io.github.connortron110.scplockdown.level.blocks.SCP914Block;
 import io.github.connortron110.scplockdown.level.blocks.SlidingDoorBlock;
 import io.github.connortron110.scplockdown.registration.SCPBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -11,14 +9,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -26,6 +20,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class SlidingDoorBlockEntity extends BlockEntity {
@@ -64,6 +59,7 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 	 * Determines how open this door is. 0 is fully closed, 80 (or {@link MAX_OPEN}) is fully open.
 	 */
 	private int OpenProgress = 0;
+	@Nullable private BlockPos SCP914Link = null;
 
 	public SlidingDoorBlockEntity(BlockPos pPos, BlockState pState) {
 		super(SCPBlockEntities.SLIDING_DOOR.get(), pPos, pState);
@@ -74,6 +70,36 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 		if (getBlockState().getValue(SlidingDoorBlock.HORIZONTAL_AXIS) == Direction.Axis.Z) return Z_DOOR_SHAPES[index];
 		else return X_DOOR_SHAPES[index];
 	}
+
+	/**
+	 * Lets this door know that it's linked to an SCP-914 instance at a given location. Also configures the door to ignore redstone signals.
+	 *
+	 * @param scp914Pos The location of SCP-914 we want to be linked to.
+	 */
+	public void linkSCP914(BlockPos scp914Pos) {
+		//	Sanity check to see if we are actually being linked to a 914
+		if (level.getBlockEntity(scp914Pos) != null && level.getBlockEntity(scp914Pos) instanceof SCP914BlockEntity) {
+			this.SCP914Link = scp914Pos;
+			this.getLevel().setBlockAndUpdate(getBlockPos(), getBlockState().setValue(SlidingDoorBlock.SIGNAL_SENSITIVE, false));
+		}
+	}
+
+	/**
+	 * Unlinks SCP-914 from this door. And configures the door to act as normal.
+	 */
+	public void unlinkSCP914() {
+		//	If 914 was never linked, what are we doing here?
+		if (this.SCP914Link == null) return;
+
+		this.SCP914Link = null;
+		this.getLevel().setBlockAndUpdate(getBlockPos(), getBlockState().setValue(SlidingDoorBlock.SIGNAL_SENSITIVE, true));
+	}
+
+	/**
+	 * @return True if SCP-914 has been linked to this door. False otherwise.
+	 */
+	public boolean isSCP914Linked() {
+		return this.SCP914Link != null;
 	}
 
 	public int getOpenProgress() {
@@ -139,12 +165,14 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 	public void load(CompoundTag pTag) {
 		super.load(pTag);
 		OpenProgress = pTag.getInt("DoorProgress");
+		if (pTag.contains("SCP914Link")) SCP914Link = BlockPos.of(pTag.getLong("SCP914Link"));
 	}
 
 	@Override
 	protected void saveAdditional(CompoundTag pTag) {
 		super.saveAdditional(pTag);
 		pTag.putInt("DoorProgress", OpenProgress);
+		if (SCP914Link != null) pTag.putLong("SCP914Link", SCP914Link.asLong());
 	}
 
 	/**
