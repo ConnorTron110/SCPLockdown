@@ -44,6 +44,7 @@ public class SCPNetwork {
 
 		registerPacket(CBCameraShake.class, NetworkDirection.PLAY_TO_CLIENT);
 
+		registerPacket(CBSCP023Howl.class, NetworkDirection.PLAY_TO_CLIENT);
 		registerPacket(CBSCP330Sync.class, NetworkDirection.PLAY_TO_CLIENT);
 	}
 
