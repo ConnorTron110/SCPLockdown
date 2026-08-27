@@ -161,8 +161,8 @@ public class SCP914BlockEntity extends BlockEntity {
 			StartUpDelay--;
 
 			if (StartUpDelay == TICKS_FOR_DOORS_TO_MOVE) {
-				setDoorOpen(InputDoorLocation, false);
-				setDoorOpen(OutputDoorLocation, false);
+				closeDoor(InputDoorLocation);
+				closeDoor(OutputDoorLocation);
 			}
 
 			if (StartUpDelay == 0) {
@@ -184,23 +184,24 @@ public class SCP914BlockEntity extends BlockEntity {
 			}
 
 			if (CraftingTime == 0) {
-				setDoorOpen(InputDoorLocation, true);
-				setDoorOpen(OutputDoorLocation, true);
+				openDoor(InputDoorLocation);
+				openDoor(OutputDoorLocation);
 				CurrentState = MachineState.IDLE;
 			}
 		}
 
 	}
 
-	private void setDoorOpen(BlockPos doorPos, boolean doorOpen) {
-		this.level.setBlock(doorPos, this.level.getBlockState(doorPos).setValue(SlidingDoorBlock.OPEN, doorOpen), Block.UPDATE_NONE);
-		this.level.setBlock(doorPos.above(), this.level.getBlockState(doorPos.above()).setValue(SlidingDoorBlock.OPEN, doorOpen), Block.UPDATE_NONE);
+	/**
+	 * Opens a given door
+	 * @param doorPos
+	 */
+	private void openDoor(BlockPos doorPos) {
+		this.level.setBlockAndUpdate(doorPos, this.level.getBlockState(doorPos).setValue(SlidingDoorBlock.OPEN, true));
 	}
 
-	private void configureDoor(BlockPos doorPos, boolean isNormalDoor) {
-		if (!(this.level.getBlockEntity(doorPos) instanceof SlidingDoorBlockEntity)) return;
-		this.level.setBlock(doorPos, this.level.getBlockState(doorPos).setValue(SlidingDoorBlock.SIGNAL_SENSITIVE, isNormalDoor), Block.UPDATE_NONE);
-		this.level.setBlock(doorPos.above(), this.level.getBlockState(doorPos.above()).setValue(SlidingDoorBlock.SIGNAL_SENSITIVE, isNormalDoor), Block.UPDATE_NONE);
+	private void closeDoor(BlockPos doorPos) {
+		this.level.setBlockAndUpdate(doorPos, this.level.getBlockState(doorPos).setValue(SlidingDoorBlock.OPEN, false));
 	}
 
 	/**
@@ -223,7 +224,7 @@ public class SCP914BlockEntity extends BlockEntity {
 			this.InputDoorLocation = doorPos;
 			this.InputBBox = new AABB(doorPos);
 			slidingDoorBlockEntity.linkSCP914(this.getBlockPos());
-			setDoorOpen(doorPos, true);
+			openDoor(doorPos);
 			return true;
 		}
 
@@ -232,7 +233,7 @@ public class SCP914BlockEntity extends BlockEntity {
 			this.OutputDoorLocation = doorPos;
 			this.OutputBBox = new AABB(doorPos);
 			slidingDoorBlockEntity.linkSCP914(this.getBlockPos());
-			setDoorOpen(doorPos, true);
+			openDoor(doorPos);
 			return true;
 		}
 
