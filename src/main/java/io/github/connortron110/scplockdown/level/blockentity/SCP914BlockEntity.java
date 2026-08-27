@@ -23,32 +23,55 @@ import java.util.List;
 
 public class SCP914BlockEntity extends BlockEntity {
 
-	private static final int START_UP_TIME = 20;    //	Time taken for doors to start closing once key is turned
+	//	Constants
+	/**
+	 * The time taken for the machine to "start up" in ticks. Once this time has passed, the doors start to close and the actual crafting process takes place.
+	 */
+	private static final int START_UP_TIME = 20;
 	private static final int TICKS_FOR_DOORS_TO_MOVE = SlidingDoorBlockEntity.TIME_TO_OPEN;
-	private static final int MAX_ENCLOSED_SIZE = 5;    //	Determines how big a dimension of the Input/Output of 914 can be (Not its area).
+	/**
+	 * Determines how large a single dimension of the Area an Input/Output can be.
+	 */
+	private static final int MAX_ENCLOSED_SIZE = 5;
 
+	//	NBT Key Constants
 	private static final String CURRENT_SETTING_KEY = "CurrentSetting";
 	private static final String INPUT_DOOR_LOCATION_KEY = "InputDoorLocation";
 	private static final String OUTPUT_DOOR_LOCATION_KEY = "OutputDoorLocation";
 
-	//  Cosmetic Rotation
-	public short KnobRotationDegrees = (short) RefiningSetting.ONEONE.toDegrees();  //  Knobs rotation from 0 -> 180
-	public short KeyRotationDegrees = 0;    //  Key Rotation 0 -> 360
+	//	Cosmetic Rotation
+	/**
+	 * Rotation of the main Knob in degrees, ranging from 0 to 180.
+	 */
+	public short KnobRotationDegrees = (short) RefiningSetting.ONEONE.toDegrees();
+	/**
+	 * Rotation of the key in degrees, ranging from 0 to 360.
+	 */
+	public short KeyRotationDegrees = 0;
 
+	//	Machine state variables
+	/**
+	 * The setting of 914 as defined in {@link RefiningSetting}
+	 */
 	private RefiningSetting CurrentSetting = RefiningSetting.ONEONE;
-	private MachineState State = MachineState.IDLE;
-	private int StartUpDelay = 0;   //  Used to count down delay
-	private int CraftingTime = 0;   //  >0 means its crafting and the doors are closed / closing
+	/**
+	 * The state of 914 as defined in {@link MachineState}
+	 */
+	private MachineState CurrentState = MachineState.IDLE;
+	/**
+	 * Used to "start up" the machine. Allows for the doors to close before the actual crafting begins.
+	 */
+	private int StartUpDelay = 0;
+	/**
+	 * Used to actually count the crafting time, and is set once the doors have closed and ingredients have been identified.
+	 */
+	private int CraftingTime = 0;
 
-	//  Input / Output Locations
-	@Nullable
-	private BlockPos InputDoorLocation;
-	@Nullable
-	private AABB InputBBox;
-	@Nullable
-	private BlockPos OutputDoorLocation;
-	@Nullable
-	private AABB OutputBBox;
+	//	Input / Output Locations
+	@Nullable private BlockPos InputDoorLocation;
+	@Nullable private AABB InputBBox;
+	@Nullable private BlockPos OutputDoorLocation;
+	@Nullable private AABB OutputBBox;
 
 	public SCP914BlockEntity(BlockPos pPos, BlockState pBlockState) {
 		super(SCPBlockEntities.SCP914.get(), pPos, pBlockState);
@@ -57,12 +80,10 @@ public class SCP914BlockEntity extends BlockEntity {
 	@Override
 	public void load(CompoundTag pTag) {
 		super.load(pTag);
-		if (pTag.contains(CURRENT_SETTING_KEY))
-			this.CurrentSetting = RefiningSetting.values()[pTag.getInt(CURRENT_SETTING_KEY)];
-		if (pTag.contains(INPUT_DOOR_LOCATION_KEY))
-			this.InputDoorLocation = BlockPos.of(pTag.getLong(INPUT_DOOR_LOCATION_KEY));
-		if (pTag.contains(OUTPUT_DOOR_LOCATION_KEY))
-			this.OutputDoorLocation = BlockPos.of(pTag.getLong(OUTPUT_DOOR_LOCATION_KEY));
+		if (pTag.contains(CURRENT_SETTING_KEY)) this.CurrentSetting = RefiningSetting.values()[pTag.getInt(CURRENT_SETTING_KEY)];
+		if (pTag.contains(INPUT_DOOR_LOCATION_KEY)) this.InputDoorLocation = BlockPos.of(pTag.getLong(INPUT_DOOR_LOCATION_KEY));
+		if (pTag.contains(OUTPUT_DOOR_LOCATION_KEY)) this.OutputDoorLocation = BlockPos.of(pTag.getLong(OUTPUT_DOOR_LOCATION_KEY));
+		//	TODO: Save and load of AABB area of input and output
 	}
 
 	@Override
@@ -84,33 +105,37 @@ public class SCP914BlockEntity extends BlockEntity {
 	}
 
 	/**
-	 * Try to turn the Knob
+	 * Attempt to turn the knob of 914, ideally changing its current refinement setting.
 	 *
 	 * @return True if the event is consumed, false otherwise
 	 */
 	public boolean tryKnob(Player player) {
-		if (State != MachineState.IDLE) return false;
+		if (CurrentState != MachineState.IDLE) {
+			return false;
+		}
+
 		CurrentSetting = CurrentSetting.cycleSetting();
 		return true;
 	}
 
 	/**
-	 * Try to turn the Key
+	 * Attempt to activate 914.
 	 *
 	 * @return True if the event is consumed, false otherwise
 	 */
 	public boolean tryKey(Player player) {
-		if (State != MachineState.IDLE) return false;
+		if (!areDoorsValid()) {
+			return false;
+		}
 
-		if (!validateDoors()) {
-			if (!level.isClientSide) player.displayClientMessage(LockdownTextComponents.SCP914_LINK_REQUIRED, true);
+		if (CurrentState != MachineState.IDLE) {
 			return false;
 		}
 
 		KeyRotationDegrees = 20;
 		this.level.playSound(null, worldPosition, SCPSounds.SCP914_REFINING_START.get(), SoundSource.BLOCKS, 1, 1);
 		this.StartUpDelay = START_UP_TIME + TICKS_FOR_DOORS_TO_MOVE;
-		this.State = MachineState.STARTING;
+		this.CurrentState = MachineState.STARTING;
 
 		return true;
 	}
@@ -126,9 +151,9 @@ public class SCP914BlockEntity extends BlockEntity {
 		if (KeyRotationDegrees != 0) KeyRotationDegrees += 20;
 		if (KeyRotationDegrees > 360) KeyRotationDegrees = 0;
 
-		if (State == MachineState.IDLE) return; //  Stop here to prevent processing further
+		if (CurrentState == MachineState.IDLE) return; //  Stop here to prevent processing further
 
-		if (State == MachineState.STARTING) {
+		if (CurrentState == MachineState.STARTING) {
 			StartUpDelay--;
 
 			if (StartUpDelay == TICKS_FOR_DOORS_TO_MOVE) {
@@ -137,7 +162,7 @@ public class SCP914BlockEntity extends BlockEntity {
 			}
 
 			if (StartUpDelay == 0) {
-				State = MachineState.PROCESSING;
+				CurrentState = MachineState.PROCESSING;
 				//	TOOD, Items are now in the machine, we can set the time to craft properly now
 				CraftingTime = 140;
 				this.level.playSound(null, worldPosition, SCPSounds.SCP914_REFINING.get(), SoundSource.BLOCKS, 1, 1);
@@ -147,7 +172,7 @@ public class SCP914BlockEntity extends BlockEntity {
 			return;
 		}
 
-		if (State == MachineState.PROCESSING) {
+		if (CurrentState == MachineState.PROCESSING) {
 			CraftingTime--;
 
 			if (CraftingTime == 70) {
@@ -157,7 +182,7 @@ public class SCP914BlockEntity extends BlockEntity {
 			if (CraftingTime == 0) {
 				setDoorOpen(InputDoorLocation, true);
 				setDoorOpen(OutputDoorLocation, true);
-				State = MachineState.IDLE;
+				CurrentState = MachineState.IDLE;
 			}
 		}
 
@@ -175,7 +200,7 @@ public class SCP914BlockEntity extends BlockEntity {
 	}
 
 	/**
-	 * Attempts to link the door to SCP914
+	 * Attempt to link a given door to 914.
 	 *
 	 * @param doorPos The position of the door we are linking
 	 * @return True if successfully linked. False otherwise.
@@ -213,7 +238,7 @@ public class SCP914BlockEntity extends BlockEntity {
 	 *
 	 * @return True if the current door configuration is valid, false if ANY are invalid.
 	 */
-	public boolean validateDoors() {
+	public boolean areDoorsValid() {
 		return isInputDoorValid() && isOutputDoorValid();
 	}
 
