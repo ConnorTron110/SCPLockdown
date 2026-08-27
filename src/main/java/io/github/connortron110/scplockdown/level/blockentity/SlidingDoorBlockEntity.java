@@ -30,14 +30,20 @@ import java.util.List;
 
 public class SlidingDoorBlockEntity extends BlockEntity {
 
-	public static final int TIME_TO_OPEN = 23; //In Ticks
+	/**
+	 * Time it takes for a door to open in ticks.
+	 */
+	public static final int TIME_TO_OPEN = 23;
+	/**
+	 * Determines how many steps there are when opening a door.
+	 * In this case 80 is chosen due to 16 "pixels" in a block. 16*5=80 so its determine this will be a smooth enough animation for most.
+	 */
 	public static final int MAX_OPEN = 80;
-	//0 = Closed, 80 = Open (80 because 16 pixels on a block, 16x5 means 5 moves per pixel which will be smooth enough)
-	private int openProgress = 0;
 
 	private static final VoxelShape[] Z_DOOR_SHAPES;
 	private static final VoxelShape[] X_DOOR_SHAPES;
 
+	//	Creates the Shapes for both axis of the door opening stages
 	static {
 		List<VoxelShape> xShapes = Lists.newArrayList();
 		List<VoxelShape> zShapes = Lists.newArrayList();
@@ -54,19 +60,24 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 		X_DOOR_SHAPES = zShapes.toArray(new VoxelShape[0]);
 	}
 
+	/**
+	 * Determines how open this door is. 0 is fully closed, 80 (or {@link MAX_OPEN}) is fully open.
+	 */
+	private int OpenProgress = 0;
+
 	public SlidingDoorBlockEntity(BlockPos pPos, BlockState pState) {
 		super(SCPBlockEntities.SLIDING_DOOR.get(), pPos, pState);
 	}
 
 	public VoxelShape getShape() {
-		int index = getBlockState().getValue(SlidingDoorBlock.HINGE) == DoorHingeSide.LEFT ? 80 - openProgress : 80 + openProgress;
-		if (getBlockState().getValue(SlidingDoorBlock.HORIZONTAL_AXIS) == Direction.Axis.Z) {
-			return Z_DOOR_SHAPES[index];
-		} else return X_DOOR_SHAPES[index];
+		int index = getBlockState().getValue(SlidingDoorBlock.HINGE) == DoorHingeSide.LEFT ? 80 - OpenProgress : 80 + OpenProgress;
+		if (getBlockState().getValue(SlidingDoorBlock.HORIZONTAL_AXIS) == Direction.Axis.Z) return Z_DOOR_SHAPES[index];
+		else return X_DOOR_SHAPES[index];
+	}
 	}
 
 	public int getOpenProgress() {
-		return openProgress;
+		return OpenProgress;
 	}
 
 	/**
@@ -75,26 +86,27 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 	 * @return true if a sound should play
 	 */
 	public boolean shouldPlaySound() {
-		return this.getBlockState().getValue(SlidingDoorBlock.OPEN) ? openProgress < 5 : openProgress > MAX_OPEN - 5;
+		return this.getBlockState().getValue(SlidingDoorBlock.OPEN) ? OpenProgress < 5 : OpenProgress > MAX_OPEN - 5;
 	}
 
 	/**
-	 * Called from block after vanilla detects player within the blocks tile, checks for player in shape and pushes them away
+	 * Moves entities if they are within the doors bounding box. Prevents players from cheesing the door if it happens to close on them.
 	 */
 	public void checkAndPushEntities() {
-		if (openProgress != MAX_OPEN) {
+		//	No point checking if an entity is in the door if its fully open
+		if (OpenProgress != MAX_OPEN) {
 			List<Entity> entities = level.getEntities(null, getShape().bounds().expandTowards(0, 1, 0).move(worldPosition));
 			if (!entities.isEmpty()) {
 				for (Entity entity : entities) {
 					if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
 
-						//  Push the player in a perpendicular direction to the door
+						//	Push the entity in a perpendicular direction to the door
 						float x = 0, z = 0;
 						if (getBlockState().getValue(SlidingDoorBlock.HORIZONTAL_AXIS) == Direction.Axis.X) {
-							//Push Player in the X Axis
+							//	Push entity in the X Axis
 							x = (entity.getX() - worldPosition.getX() > 0.5) ? 0.1F : -0.1F;
 						} else {
-							//Push Player in the Z Axis
+							//	Push entity in the Z Axis
 							z = (entity.getZ() - worldPosition.getZ() > 0.5) ? 0.1F : -0.1F;
 						}
 
@@ -107,12 +119,12 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 
 	public void tick() {
 		if (getBlockState().getValue(SlidingDoorBlock.OPEN)) {
-			openProgress += MAX_OPEN / TIME_TO_OPEN;
+			OpenProgress += MAX_OPEN / TIME_TO_OPEN;
 		} else {
-			openProgress -= MAX_OPEN / TIME_TO_OPEN;
+			OpenProgress -= MAX_OPEN / TIME_TO_OPEN;
 		}
 
-		openProgress = Mth.clamp(openProgress, 0, MAX_OPEN);
+		OpenProgress = Mth.clamp(OpenProgress, 0, MAX_OPEN);
 		checkAndPushEntities();
 	}
 
@@ -124,14 +136,24 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag pTag) {
-		super.saveAdditional(pTag);
-		pTag.putInt("DoorProgress", openProgress);
+	public void load(CompoundTag pTag) {
+		super.load(pTag);
+		OpenProgress = pTag.getInt("DoorProgress");
 	}
 
 	@Override
-	public void load(CompoundTag pTag) {
-		super.load(pTag);
-		openProgress = pTag.getInt("DoorProgress");
+	protected void saveAdditional(CompoundTag pTag) {
+		super.saveAdditional(pTag);
+		pTag.putInt("DoorProgress", OpenProgress);
+	}
+
+	/**
+	 * Allows for servers and clients to reliably sync
+	 */
+	@Override
+	public CompoundTag getUpdateTag() {
+		CompoundTag tag = new CompoundTag();
+		saveAdditional(tag);
+		return tag;
 	}
 }

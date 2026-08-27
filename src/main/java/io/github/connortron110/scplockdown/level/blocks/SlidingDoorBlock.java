@@ -10,13 +10,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -30,95 +28,95 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
-public class SlidingDoorBlock extends Block implements EntityBlock, IScrewdriverInteraction {
+public class SlidingDoorBlock extends LockdownDoubleTallBlock implements EntityBlock, IScrewdriverInteraction {
 	public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
-	//  Looking towards the Positive axis direction, Hinge determines if the door opens LEFT or RIGHT
-	public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
+	public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;	//	Looking towards the Positive axis direction, Hinge determines if the door opens LEFT or RIGHT
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 	public static final BooleanProperty SIGNAL_SENSITIVE = BooleanProperty.create("signal_sensitive");
 
 	public SlidingDoorBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(this.getStateDefinition().any().setValue(HORIZONTAL_AXIS, Direction.Axis.X).setValue(OPEN, false).setValue(HINGE, DoorHingeSide.LEFT).setValue(POWERED, false).setValue(HALF, DoubleBlockHalf.LOWER));
 	}
-
-	//  Valid Placement Checks  \\
 
 	@Nullable
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		//  Check if block above can be replaced
-		if (!context.getLevel().getBlockState(context.getClickedPos().relative(Direction.UP)).canBeReplaced(context))
+	protected BlockState setAdditionalDefaultStates() {
+		return this.getStateDefinition().any().setValue(HORIZONTAL_AXIS, Direction.Axis.X).setValue(OPEN, false).setValue(HINGE, DoorHingeSide.LEFT).setValue(POWERED, false);
+	}
+
+	/**
+	 * Returns the state of the door we are about to place.
+	 *
+	 * @return Blockstate of the block we want to place, null if an invalid placement.
+	 */
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+		//	Placement checks for double tall
+		BlockState state = super.getStateForPlacement(pContext);
+		if (state == null)
 			return null;
 
-		//  Kinda Scuffed Reference with `Blocks.OAK_DOOR` But method is non-static so kinda annoying
-		DoorHingeSide hinge = ((DoorBlock) Blocks.OAK_DOOR).getHinge(context);
+		//	Kinda Scuffed Reference with `Blocks.OAK_DOOR` But method is non-static so kinda annoying, but it makes our lives a bit easier
+		DoorHingeSide hinge = ((DoorBlock) Blocks.OAK_DOOR).getHinge(pContext);
 
-		//  If player is looking towards the negative of the axis, then inverse the hinge
-		if (context.getHorizontalDirection().getAxisDirection() == Direction.AxisDirection.NEGATIVE) {
+		//	DoorBlock#getHinge() Only accounts for the positive axis directions, so if the player is looking in the negative axis, the door's placement is flipped, so account for that here
+		if (pContext.getHorizontalDirection().getAxisDirection() == Direction.AxisDirection.NEGATIVE)
 			hinge = (hinge == DoorHingeSide.LEFT ? DoorHingeSide.RIGHT : DoorHingeSide.LEFT);
-		}
 
-		//  The state we are going to return with appropriate hinge and axis values
-		BlockState ret = defaultBlockState().setValue(HORIZONTAL_AXIS, context.getHorizontalDirection().getAxis()).setValue(HINGE, hinge).setValue(SIGNAL_SENSITIVE, true);
+		//	The state we are going to return with appropriate hinge and axis values
+		state = state.setValue(HORIZONTAL_AXIS, pContext.getHorizontalDirection().getAxis()).setValue(HINGE, hinge).setValue(SIGNAL_SENSITIVE, true);
 
-		//  Check to see if partner door is the same type
-		Block doubleDoorCheck = context.getLevel().getBlockState(context.getClickedPos().relative(getDoubleDoorDirection(ret))).getBlock();
+		//	If we are making a double door, make sure the other side (if it exists) is the same type of sliding door
+		Block doubleDoorCheck = pContext.getLevel().getBlockState(pContext.getClickedPos().relative(getDoubleDoorDirection(state))).getBlock();
 		if (!doubleDoorCheck.equals(this) && doubleDoorCheck instanceof SlidingDoorBlock) return null;
 
-		return ret;
+		return state;
 	}
 
-	@Override   //  When block is updated by neighbours, check if still connected to upper / lower half
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
-		if (getConnectedDirection(state) == direction) {
-			return ((neighborState.is(this)) && (state.getValue(HALF) != neighborState.getValue(HALF)) && (state.getValue(HORIZONTAL_AXIS) == neighborState.getValue(HORIZONTAL_AXIS))) ? state : Blocks.AIR.defaultBlockState();
-		} else return state;
-	}
-
-	@Override   //  Player place call, used to properly set up the door block and its other half
-	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-		if (!pLevel.isClientSide) {
-			pLevel.setBlockAndUpdate(pPos.relative(Direction.UP), pState.setValue(HALF, DoubleBlockHalf.UPPER));
-			pLevel.updateNeighborsAt(pPos, this);
-			pLevel.updateNeighborsAt(pPos.relative(Direction.UP), this);
-		}
-	}
-
-	@Override   //  Removes the other half when player is destroying this block
-	public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
-		super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
-		//  As a cool workaround, the lower half of the block does not drop anything, but the top half will
-		if (!pLevel.isClientSide && pPlayer.isCreative() && pState.getValue(HALF) == DoubleBlockHalf.LOWER) {
-			pLevel.setBlockAndUpdate(pPos.relative(Direction.UP), Blocks.AIR.defaultBlockState());
-			pLevel.updateNeighborsAt(pPos.relative(Direction.UP), this);
-		}
-	}
-
-	//  End of Placement checks  \\
-
+	/**
+	 * Called when an adjacent block gets updated and forces updates to its neighbours.
+	 * This is responsible for Setting the door open and or syncing its state to the other half.
+	 * Still don't know what the full difference between this and {@link updateShape} fully is.
+	 */
 	@Override
 	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pNeighborBlock, BlockPos pNeighborPos, boolean pMovedByPiston) {
 		super.neighborChanged(pState, pLevel, pPos, pNeighborBlock, pNeighborPos, pMovedByPiston);
 		if (pLevel.isClientSide) return;
 
-		//  If we are NOT signal sensitive, do nothing
-		if (!pState.getValue(SIGNAL_SENSITIVE)) return;
+		//	First, check if the other half is actually there before doing anything
+		if (!canSurvive(pState, pLevel, pPos)) return;
 
-		//  Check if THIS door (including its lower/upper half) if it has a signal
+		//	Check if the signal sensitive is out of sync, if so, sync it
+		if (pState.getValue(SIGNAL_SENSITIVE) != pLevel.getBlockState(pPos.relative(getConnectedDirection(pState))).getValue(SIGNAL_SENSITIVE)) {
+			pLevel.setBlock(pPos, pState.setValue(SIGNAL_SENSITIVE, pLevel.getBlockState(pPos.relative(getConnectedDirection(pState))).getValue(SIGNAL_SENSITIVE)), Block.UPDATE_NONE);
+
+			//	Recall this to properly sync other states
+			this.neighborChanged(pLevel.getBlockState(pPos), pLevel, pPos, pNeighborBlock, pNeighborPos, pMovedByPiston);
+			return;
+		}
+
+		//	If we are NOT signal sensitive, just blindly copy the opposite side, without causing another update.
+		if (!pState.getValue(SIGNAL_SENSITIVE)) {
+			BlockState otherHalfState = pLevel.getBlockState(pPos.relative(getConnectedDirection(pState)));
+			pLevel.setBlock(pPos, otherHalfState.setValue(HALF, pState.getValue(HALF)), Block.UPDATE_NONE);
+			return;
+		}
+
+		//	Check if THIS door (including its lower/upper half) if it has a signal
 		boolean doesThisDoorHaveSignal = pLevel.hasNeighborSignal(pPos) || pLevel.hasNeighborSignal(pPos.relative(pState.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
-		//  Check if the door to the left/right acting as a double door has a signal
+		//	Check if the door to the left/right acting as a double door has a signal
 		boolean doesDoubleDoorOtherSideHaveSignal = pLevel.hasNeighborSignal(pPos.relative(getDoubleDoorDirection(pState))) || pLevel.hasNeighborSignal(pPos.relative(getDoubleDoorDirection(pState)).relative(pState.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
 		boolean shouldBePowered = doesThisDoorHaveSignal || doesDoubleDoorOtherSideHaveSignal;
 		boolean shouldUpdate = shouldBePowered != pState.getValue(POWERED);
 
-		//  Update ourselves, other pair can update themselves
+		//	Update ourselves, other pair can update themselves
 		if (shouldUpdate) {
 			pLevel.setBlockAndUpdate(pPos, pState.setValue(POWERED, shouldBePowered).setValue(OPEN, shouldBePowered));
 
-			//  Play sound if required
+			//	Play sound if required
 			if (pLevel.getBlockEntity(pPos) != null && pLevel.getBlockEntity(pPos) instanceof SlidingDoorBlockEntity slidingDoorBlockEntity && slidingDoorBlockEntity.shouldPlaySound()) {
 				pLevel.playSound(null, pPos, getSound(pState), SoundSource.BLOCKS, 1, 1);
 			}
@@ -129,8 +127,8 @@ public class SlidingDoorBlock extends Block implements EntityBlock, IScrewdriver
 	 * @return The Direction relative to where the other door should be based on the hinge of the door
 	 */
 	private Direction getDoubleDoorDirection(BlockState state) {
-		Direction ret = state.getValue(HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.EAST : Direction.SOUTH; //  Get the Axis the door is on
-		ret = state.getValue(HINGE) == DoorHingeSide.RIGHT ? ret.getCounterClockWise() : ret.getClockWise();    //  Facing the positive cardinal of the door, rotate left or right based on hinge ro get relative positon
+		Direction ret = state.getValue(HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;	//	Get the Axis the door is on
+		ret = state.getValue(HINGE) == DoorHingeSide.RIGHT ? ret.getCounterClockWise() : ret.getClockWise();	//	Facing the positive cardinal of the door, rotate left or right based on hinge ro get relative positon
 		return ret;
 	}
 
@@ -139,10 +137,10 @@ public class SlidingDoorBlock extends Block implements EntityBlock, IScrewdriver
 	 */
 	public SoundEvent getSound(BlockState state) {
 		if (state.getBlock().equals(SCPBlocks.MAGNETIZED_DOOR.get())) {
-			//  Magnetized
+			//	Magnetized
 			return !state.getValue(OPEN) ? SCPSounds.MAGNETIZED_DOOR_OPEN.get() : SCPSounds.MAGNETIZED_DOOR_CLOSE.get();
 		} else {
-			//  Normal
+			//	Normal
 			return !state.getValue(OPEN) ? SCPSounds.SLIDING_DOOR_OPEN.get() : SCPSounds.SLIDING_DOOR_CLOSE.get();
 		}
 	}
@@ -151,12 +149,12 @@ public class SlidingDoorBlock extends Block implements EntityBlock, IScrewdriver
 	 * Gets the BE from the door. BE is always at the bottom half.
 	 */
 	@Nullable
-	private SlidingDoorBlockEntity getSlidingDoorEntity(BlockGetter level, BlockPos pos, BlockState state) {
+	public static SlidingDoorBlockEntity getSlidingDoorEntity(BlockGetter level, BlockPos pos, BlockState state) {
 		BlockPos positionOfBE = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
 		if (level.getBlockEntity(positionOfBE) != null && level.getBlockEntity(positionOfBE) instanceof SlidingDoorBlockEntity) {
 			return (SlidingDoorBlockEntity) level.getBlockEntity(positionOfBE);
 		} else {
-			//  BE somehow doesnt exist, invalid placement etc
+			//	BE somehow doesn't exist, invalid placement etc
 			return null;
 		}
 	}
@@ -166,7 +164,7 @@ public class SlidingDoorBlock extends Block implements EntityBlock, IScrewdriver
 	 */
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		SlidingDoorBlockEntity be = this.getSlidingDoorEntity(level, pos, state);
+		SlidingDoorBlockEntity be = getSlidingDoorEntity(level, pos, state);
 		if (be != null) {
 			return be.getShape();
 		} else return Block.box(0, 0, 7, 16, 16, 9);
