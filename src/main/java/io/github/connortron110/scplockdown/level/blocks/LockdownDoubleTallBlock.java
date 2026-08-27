@@ -45,35 +45,33 @@ public abstract class LockdownDoubleTallBlock extends LockdownBlock {
 	 */
 	@Nullable
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		//Check if block can survive in current position
-		if (!canSurvive(defaultBlockState(), context.getLevel(), context.getClickedPos())) {
-			if (context.getLevel().getMaxBuildHeight() != context.getClickedPos().getY() && context.getPlayer() != null) //Avoids text flicker when at max height
-				context.getPlayer().displayClientMessage(LockdownTextComponents.BLOCK_INVALID_PLACEMENT, true);
+	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+		//	Height check
+		if ((pContext.getLevel().getMaxBuildHeight() - pContext.getClickedPos().getY() < 2)) {
+			pContext.getPlayer().displayClientMessage(LockdownTextComponents.BLOCK_INVALID_PLACEMENT, true);
 			return null;
 		}
+
+		//	Check if the block above can be replaced
+		if (!pContext.getLevel().getBlockState(pContext.getClickedPos().relative(Direction.UP)).canBeReplaced(pContext))
+			return null;
 
 		return defaultBlockState();
 	}
 
 	/**
-	 * Checks if the block can survive, given if its paired block is there or where it's meant to be is replaceable
+	 * Copy of {@link net.minecraft.world.level.block.DoublePlantBlock#canSurvive(BlockState, LevelReader, BlockPos)}
 	 */
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-		//Half Checks to see if paired block is still there, or if the space is available to place paired block
-		BlockState paredState = level.getBlockState(isLowerHalf(state) ? pos.above() : pos.below());    //Get the opposite half's state
-		if (paredState.is(state.getBlock())) {   //If the pared block is the same
-			if (state.getValue(HALF) == paredState.getValue(HALF))
-				return false;   //If both are the same half, then its an invalid placement
-		} else if (!paredState.canBeReplaced())
-			return false; //If the pared state is not this block and is NOT replaceable, its invalid
-
-		//Height Check(s)
-		if ((level.getMaxBuildHeight() - pos.getY() < 2) && isLowerHalf(state)) return false;
-		if (pos.getY() == 0 && isUpperHalf(state)) return false;
-
-		return true;
+	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+		//	Half Checks to see if paired block is still there
+		if (isLowerHalf(pState)) {
+			return super.canSurvive(pState, pLevel, pPos);
+		} else {
+			//	This is the upper half
+			BlockState lowerState = pLevel.getBlockState(pPos.below());
+			return lowerState.is(this) && isLowerHalf(lowerState);
+		}
 	}
 
 	/**
@@ -81,16 +79,19 @@ public abstract class LockdownDoubleTallBlock extends LockdownBlock {
 	 */
 	@Override
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		level.setBlock(isLowerHalf(state) ? pos.above() : pos.below(), state.cycle(HALF), Block.UPDATE_ALL);
+		level.setBlockAndUpdate(isLowerHalf(state) ? pos.above() : pos.below(), state.cycle(HALF));
 	}
 
 	//End of Placement Checks\\
 
+	/**
+	 * Copy of {@link net.minecraft.world.level.block.DoublePlantBlock#playerWillDestroy(Level, BlockPos, BlockState, Player)}
+	 */
 	@Override
 	public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
 		if (!level.isClientSide) {
 			if (player.isCreative()) {
-				preventCreativeDropFromBottomPart(level, pos, state, player);
+				preventCreativeDropFromBottomPart(level, pos, state);
 			} else {
 				dropResources(state, level, pos, null, player, player.getMainHandItem());
 			}
@@ -99,26 +100,35 @@ public abstract class LockdownDoubleTallBlock extends LockdownBlock {
 		super.playerWillDestroy(level, pos, state, player);
 	}
 
+	/**
+	 * Copy of {@link net.minecraft.world.level.block.DoublePlantBlock#playerDestroy(Level, Player, BlockPos, BlockState, BlockEntity, ItemStack)}
+	 */
 	@Override
-	public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
-		super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), blockEntity, tool);
+	public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pBlockEntity, ItemStack pTool) {
+		super.playerDestroy(pLevel, pPlayer, pPos, Blocks.AIR.defaultBlockState(), pBlockEntity, pTool);
 	}
 
-	@Override   //  Pulled from DoublePlantBlock
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
-		DoubleBlockHalf doubleblockhalf = state.getValue(HALF);
-		if (direction.getAxis() != Direction.Axis.Y || doubleblockhalf == DoubleBlockHalf.LOWER != (direction == Direction.UP) || neighborState.is(this) && neighborState.getValue(HALF) != doubleblockhalf) {
-			return doubleblockhalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !canSurvive(state, level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+	/**
+	 * Copy of {@link net.minecraft.world.level.block.DoublePlantBlock#updateShape(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)}
+	 */
+	@Override
+	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
+		DoubleBlockHalf doubleblockhalf = pState.getValue(HALF);
+		if (pDirection.getAxis() != Direction.Axis.Y || doubleblockhalf == DoubleBlockHalf.LOWER != (pDirection == Direction.UP) || pNeighborState.is(this) && pNeighborState.getValue(HALF) != doubleblockhalf) {
+			return doubleblockhalf == DoubleBlockHalf.LOWER && pDirection == Direction.DOWN && !canSurvive(pState, pLevel, pPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
 		} else {
 			return Blocks.AIR.defaultBlockState();
 		}
 	}
 
-	protected void preventCreativeDropFromBottomPart(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
+	/**
+	 * Mostly a copy of {@link net.minecraft.world.level.block.DoublePlantBlock#preventCreativeDropFromBottomPart(Level, BlockPos, BlockState, Player)}
+	 */
+	protected void preventCreativeDropFromBottomPart(Level pLevel, BlockPos pPos, BlockState pState) {
 		if (isUpperHalf(pState)) {
 			BlockPos lowerPos = pPos.below();
 			BlockState lowerState = pLevel.getBlockState(lowerPos);
-			if (lowerState.getBlock() == pState.getBlock() && isLowerHalf(lowerState)) {
+			if (lowerState.is(pState.getBlock()) && isLowerHalf(lowerState)) {
 				pLevel.destroyBlock(lowerPos, false);
 			}
 		}
@@ -142,12 +152,24 @@ public abstract class LockdownDoubleTallBlock extends LockdownBlock {
 		}
 	}
 
+	/**
+	 * Determines if this state is the lower half
+	 *
+	 * @param state The state we want to check
+	 * @return True if the state is the lower half. False otherwise
+	 */
 	protected boolean isLowerHalf(BlockState state) {
 		return state.getValue(HALF) == DoubleBlockHalf.LOWER;
 	}
 
+	/**
+	 * Determines if this state is the upper half
+	 *
+	 * @param state The state we want to check
+	 * @return True if the state is the upper half. False otherwise
+	 */
 	protected boolean isUpperHalf(BlockState state) {
-		return !isLowerHalf(state);
+		return state.getValue(HALF) == DoubleBlockHalf.UPPER;
 	}
 
 
