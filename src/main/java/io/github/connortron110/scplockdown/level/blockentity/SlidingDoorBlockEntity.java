@@ -152,6 +152,11 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 
 		OpenProgress = Mth.clamp(OpenProgress, 0, MAX_OPEN);
 		checkAndPushEntities();
+
+		//	Check if SCP-914 still exists
+		if (this.SCP914Link != null)
+			if (!(this.getLevel().getBlockEntity(this.SCP914Link) instanceof SCP914BlockEntity))
+				this.unlinkSCP914();
 	}
 
 	private static final AABB RENDER_BOUNDS = new AABB(0, 0, 0, 1, 2, 1);

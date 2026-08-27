@@ -292,15 +292,6 @@ public class SCP914BlockEntity extends BlockEntity {
 		return true;
 	}
 
-	@Override
-	public void setRemoved() {
-		if (InputDoorLocation != null && level.getBlockEntity(InputDoorLocation) instanceof SlidingDoorBlockEntity inputDoorBlockEntity)
-			inputDoorBlockEntity.unlinkSCP914();
-		if (OutputDoorLocation != null && level.getBlockEntity(OutputDoorLocation) instanceof SlidingDoorBlockEntity outputDoorBlockEntity)
-			outputDoorBlockEntity.unlinkSCP914();
-		super.setRemoved();
-	}
-
 	/**
 	 * Tests to see if the given AABB has blocks surrounding it (Including sliding doors)
 	 *
