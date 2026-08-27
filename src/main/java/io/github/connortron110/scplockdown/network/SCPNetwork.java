@@ -46,6 +46,7 @@ public class SCPNetwork {
 
 		registerPacket(CBSCP023Howl.class, NetworkDirection.PLAY_TO_CLIENT);
 		registerPacket(CBSCP330Sync.class, NetworkDirection.PLAY_TO_CLIENT);
+		registerPacket(CBSCP914Refining.class, NetworkDirection.PLAY_TO_CLIENT);
 	}
 
 	private static int id = 0;

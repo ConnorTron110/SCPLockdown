@@ -1,6 +1,8 @@
 package io.github.connortron110.scplockdown.level.blockentity;
 
 import io.github.connortron110.scplockdown.level.blocks.SlidingDoorBlock;
+import io.github.connortron110.scplockdown.network.SCPNetwork;
+import io.github.connortron110.scplockdown.network.client.CBSCP914Refining;
 import io.github.connortron110.scplockdown.registration.SCPBlockEntities;
 import io.github.connortron110.scplockdown.registration.SCPSounds;
 import io.github.connortron110.scplockdown.utils.LockdownTextComponents;
@@ -13,10 +15,10 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -152,10 +154,12 @@ public class SCP914BlockEntity extends BlockEntity {
 			else KnobRotationDegrees -= (short) ((CurrentSetting.toDegrees() - KnobRotationDegrees < -9) ? 18 : 9);
 		}
 
+		//	Key Spin
 		if (KeyRotationDegrees != 0) KeyRotationDegrees += 20;
 		if (KeyRotationDegrees > 360) KeyRotationDegrees = 0;
 
-		if (CurrentState == MachineState.IDLE) return; //  Stop here to prevent processing further
+		//	If idle, we are doing nothing, so just stop here
+		if (CurrentState == MachineState.IDLE) return;
 
 		if (CurrentState == MachineState.STARTING) {
 			StartUpDelay--;
@@ -167,20 +171,21 @@ public class SCP914BlockEntity extends BlockEntity {
 
 			if (StartUpDelay == 0) {
 				CurrentState = MachineState.PROCESSING;
-				//	TOOD, Items are now in the machine, we can set the time to craft properly now
-				CraftingTime = 140;
-				this.level.playSound(null, worldPosition, SCPSounds.SCP914_REFINING.get(), SoundSource.BLOCKS, 1, 1);
+				//	TODO: Items are now in the machine, we can set the time to craft properly now
+				if (!level.isClientSide)
+					SCPNetwork.NETWORK.send(PacketDistributor.DIMENSION.with(() -> level.dimension()), new CBSCP914Refining(getBlockPos()));
+				CraftingTime = 235;
 			}
 
-			//  Check Doors if they are closed
 			return;
 		}
 
-		if (CurrentState == MachineState.PROCESSING) {
+		if (CurrentState == MachineState.PROCESSING || CurrentState == MachineState.FINISHING) {
 			CraftingTime--;
 
 			if (CraftingTime == 70) {
 				this.level.playSound(null, worldPosition, SCPSounds.SCP914_REFINING_STOP.get(), SoundSource.BLOCKS, 1, 1);
+				CurrentState = MachineState.FINISHING;
 			}
 
 			if (CraftingTime == 0) {
@@ -189,17 +194,18 @@ public class SCP914BlockEntity extends BlockEntity {
 				CurrentState = MachineState.IDLE;
 			}
 		}
-
 	}
 
 	/**
 	 * Opens a given door
-	 * @param doorPos
 	 */
 	private void openDoor(BlockPos doorPos) {
 		this.level.setBlockAndUpdate(doorPos, this.level.getBlockState(doorPos).setValue(SlidingDoorBlock.OPEN, true));
 	}
 
+	/**
+	 * Closes a given door
+	 */
 	private void closeDoor(BlockPos doorPos) {
 		this.level.setBlockAndUpdate(doorPos, this.level.getBlockState(doorPos).setValue(SlidingDoorBlock.OPEN, false));
 	}
@@ -333,8 +339,14 @@ public class SCP914BlockEntity extends BlockEntity {
 		return null;
 	}
 
-	private enum MachineState {
-		MISSING_DOORS,
+	/**
+	 * @return The current state of 914.
+	 */
+	public MachineState getCurrentState() {
+		return CurrentState;
+	}
+
+	public enum MachineState {
 		IDLE,
 		STARTING,
 		PROCESSING,
