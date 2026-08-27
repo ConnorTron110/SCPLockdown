@@ -91,7 +91,7 @@ public class SlidingDoorBlock extends LockdownDoubleTallBlock implements EntityB
 
 		//	Check if the signal sensitive is out of sync, if so, sync it
 		if (pState.getValue(SIGNAL_SENSITIVE) != pLevel.getBlockState(pPos.relative(getConnectedDirection(pState))).getValue(SIGNAL_SENSITIVE)) {
-			pLevel.setBlock(pPos, pState.setValue(SIGNAL_SENSITIVE, pLevel.getBlockState(pPos.relative(getConnectedDirection(pState))).getValue(SIGNAL_SENSITIVE)), Block.UPDATE_NONE);
+			pLevel.setBlock(pPos, pState.setValue(SIGNAL_SENSITIVE, pLevel.getBlockState(pPos.relative(getConnectedDirection(pState))).getValue(SIGNAL_SENSITIVE)), Block.UPDATE_CLIENTS);
 
 			//	Recall this to properly sync other states
 			this.neighborChanged(pLevel.getBlockState(pPos), pLevel, pPos, pNeighborBlock, pNeighborPos, pMovedByPiston);
@@ -101,7 +101,7 @@ public class SlidingDoorBlock extends LockdownDoubleTallBlock implements EntityB
 		//	If we are NOT signal sensitive, just blindly copy the opposite side, without causing another update.
 		if (!pState.getValue(SIGNAL_SENSITIVE)) {
 			BlockState otherHalfState = pLevel.getBlockState(pPos.relative(getConnectedDirection(pState)));
-			pLevel.setBlock(pPos, otherHalfState.setValue(HALF, pState.getValue(HALF)), Block.UPDATE_NONE);
+			pLevel.setBlock(pPos, otherHalfState.setValue(HALF, pState.getValue(HALF)), Block.UPDATE_CLIENTS);
 			return;
 		}
 
@@ -110,7 +110,7 @@ public class SlidingDoorBlock extends LockdownDoubleTallBlock implements EntityB
 		//	Check if the door to the left/right acting as a double door has a signal
 		boolean doesDoubleDoorOtherSideHaveSignal = pLevel.hasNeighborSignal(pPos.relative(getDoubleDoorDirection(pState))) || pLevel.hasNeighborSignal(pPos.relative(getDoubleDoorDirection(pState)).relative(pState.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
 		boolean shouldBePowered = doesThisDoorHaveSignal || doesDoubleDoorOtherSideHaveSignal;
-		boolean shouldUpdate = shouldBePowered != pState.getValue(POWERED);
+		boolean shouldUpdate = shouldBePowered != pState.getValue(POWERED) || shouldBePowered != pState.getValue(OPEN);
 
 		//	Update ourselves, other pair can update themselves
 		if (shouldUpdate) {
