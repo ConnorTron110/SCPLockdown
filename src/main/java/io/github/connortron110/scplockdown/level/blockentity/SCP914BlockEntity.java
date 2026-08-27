@@ -7,6 +7,7 @@ import io.github.connortron110.scplockdown.utils.LockdownTextComponents;
 import io.github.connortron110.scplockdown.utils.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.network.simple.SimpleChannel;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -111,10 +111,12 @@ public class SCP914BlockEntity extends BlockEntity {
 	 */
 	public boolean tryKnob(Player player) {
 		if (CurrentState != MachineState.IDLE) {
+			player.displayClientMessage(LockdownTextComponents.SCP914_BUSY, true);
 			return false;
 		}
 
 		CurrentSetting = CurrentSetting.cycleSetting();
+		player.displayClientMessage(CurrentSetting.getSettingMessage(), true);
 		return true;
 	}
 
@@ -125,10 +127,12 @@ public class SCP914BlockEntity extends BlockEntity {
 	 */
 	public boolean tryKey(Player player) {
 		if (!areDoorsValid()) {
+			player.displayClientMessage(LockdownTextComponents.SCP914_LINK_REQUIRED, true);
 			return false;
 		}
 
 		if (CurrentState != MachineState.IDLE) {
+			player.displayClientMessage(LockdownTextComponents.SCP914_BUSY, true);
 			return false;
 		}
 
@@ -364,6 +368,16 @@ public class SCP914BlockEntity extends BlockEntity {
 				case FINE -> 135;
 				case VERYFINE -> 180;
 				default -> 90;
+			};
+		}
+
+		public MutableComponent getSettingMessage() {
+			return switch (this) {
+				case ROUGH -> LockdownTextComponents.SCP914_SET_ROUGH;
+				case COARSE -> LockdownTextComponents.SCP914_SET_COARSE;
+				case ONEONE -> LockdownTextComponents.SCP914_SET_ONEONE;
+				case FINE -> LockdownTextComponents.SCP914_SET_FINE;
+				case VERYFINE -> LockdownTextComponents.SCP914_SET_VERYFINE;
 			};
 		}
 	}

@@ -31,4 +31,9 @@ public abstract class LockdownTextComponents {
 	public static final MutableComponent SCP914_LINK_SUCCESS = Component.translatable("scplockdown.scp914.link.success").withStyle(ChatFormatting.DARK_GREEN);
 	public static final MutableComponent SCP914_LINK_EXISTS = Component.translatable("scplockdown.scp914.link.exists").withStyle(ChatFormatting.GOLD);
 	public static final MutableComponent SCP914_BUSY = Component.translatable("scplockdown.scp914.busy").withStyle(ChatFormatting.GOLD);
+	public static final MutableComponent SCP914_SET_ROUGH = Component.translatable("scplockdown.scp914.set.rough");
+	public static final MutableComponent SCP914_SET_COARSE = Component.translatable("scplockdown.scp914.set.coarse");
+	public static final MutableComponent SCP914_SET_ONEONE = Component.translatable("scplockdown.scp914.set.oneone");
+	public static final MutableComponent SCP914_SET_FINE = Component.translatable("scplockdown.scp914.set.fine");
+	public static final MutableComponent SCP914_SET_VERYFINE = Component.translatable("scplockdown.scp914.set.veryfine");
 }
