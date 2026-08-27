@@ -33,7 +33,6 @@ public class SlidingDoorBlock extends LockdownDoubleTallBlock implements EntityB
 	public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 	public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;	//	Looking towards the Positive axis direction, Hinge determines if the door opens LEFT or RIGHT
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-	public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 	public static final BooleanProperty SIGNAL_SENSITIVE = BooleanProperty.create("signal_sensitive");
 
 	public SlidingDoorBlock(Properties properties) {
@@ -186,7 +185,7 @@ public class SlidingDoorBlock extends LockdownDoubleTallBlock implements EntityB
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(HORIZONTAL_AXIS, OPEN, HINGE, POWERED, HALF, SIGNAL_SENSITIVE);
+		super.createBlockStateDefinition(builder.add(HORIZONTAL_AXIS, OPEN, HINGE, POWERED, SIGNAL_SENSITIVE));
 	}
 
 	@Nullable
