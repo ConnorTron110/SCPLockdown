@@ -219,6 +219,10 @@ public class SCP914BlockEntity extends BlockEntity {
 		if (slidingDoorBlockEntity == null) return false;
 		doorPos = slidingDoorBlockEntity.getBlockPos();
 
+		//	Check if the door has already been linked
+		if (slidingDoorBlockEntity.isSCP914Linked())
+			return false;
+
 		//	If we have no input door, link it to that first
 		if (this.InputDoorLocation == null) {
 			this.InputDoorLocation = doorPos;
