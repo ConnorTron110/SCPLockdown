@@ -210,6 +210,8 @@ public class SlidingDoorBlock extends LockdownDoubleTallBlock implements EntityB
 				if (blockEntity.linkDoor(getSlidingDoorEntity(level, pos, state).getBlockPos())) {
 					player.displayClientMessage(LockdownTextComponents.SCP914_LINK_SUCCESS, true);
 					screwdriver.getOrCreateTag().remove(SCP914Block.DOOR_LINK_KEY);
+				} else {
+					player.displayClientMessage(LockdownTextComponents.SCP914_LINK_FAIL, true);
 				}
 			}
 		}

@@ -73,6 +73,7 @@ public class LockdownLangProvider extends LanguageProvider {
 			add(LockdownTextComponents.SCP914_LINK_INPUT, "Now linking Input door to SCP-914");
 			add(LockdownTextComponents.SCP914_LINK_OUTPUT, "Now linking Output door to SCP-914");
 			add(LockdownTextComponents.SCP914_LINK_SUCCESS, "Door successfully linked to SCP-914");
+			add(LockdownTextComponents.SCP914_LINK_FAIL, "Door already has a link or does not have an enclosed space!");
 			add(LockdownTextComponents.SCP914_LINK_EXISTS, "SCP-914 already has linked doors!");
 			add(LockdownTextComponents.SCP914_BUSY, "SCP-914 is currently busy.");
 			add(LockdownTextComponents.SCP914_SET_ROUGH, "Set SCP-914 to Rough");

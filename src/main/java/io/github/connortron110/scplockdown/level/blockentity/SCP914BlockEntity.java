@@ -8,6 +8,7 @@ import io.github.connortron110.scplockdown.registration.SCPSounds;
 import io.github.connortron110.scplockdown.utils.LockdownTextComponents;
 import io.github.connortron110.scplockdown.utils.Utils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
@@ -18,10 +19,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class SCP914BlockEntity extends BlockEntity {
 
@@ -85,7 +88,6 @@ public class SCP914BlockEntity extends BlockEntity {
 		if (pTag.contains(CURRENT_SETTING_KEY)) this.CurrentSetting = RefiningSetting.values()[pTag.getInt(CURRENT_SETTING_KEY)];
 		if (pTag.contains(INPUT_DOOR_LOCATION_KEY)) this.InputDoorLocation = BlockPos.of(pTag.getLong(INPUT_DOOR_LOCATION_KEY));
 		if (pTag.contains(OUTPUT_DOOR_LOCATION_KEY)) this.OutputDoorLocation = BlockPos.of(pTag.getLong(OUTPUT_DOOR_LOCATION_KEY));
-		//	TODO: Save and load of AABB area of input and output
 	}
 
 	@Override
@@ -229,19 +231,26 @@ public class SCP914BlockEntity extends BlockEntity {
 		if (slidingDoorBlockEntity.isSCP914Linked())
 			return false;
 
-		//	If we have no input door, link it to that first
+		//	If we have no input door, link it to that first (Java cant reference primitives :( )
 		if (this.InputDoorLocation == null) {
+			//	Find AABB first. If it fails, there's no enclosed space, meaning we can discard
+			this.InputBBox = tryFindEnclosedSpaceFromDoor(doorPos);
+			if (this.InputBBox == null)
+				return false;
+
 			this.InputDoorLocation = doorPos;
-			this.InputBBox = new AABB(doorPos);
 			slidingDoorBlockEntity.linkSCP914(this.getBlockPos());
 			openDoor(doorPos);
 			return true;
 		}
 
-		//	If we have no output door, link it to that
+		//	If we have no output door, link it to that (same as above)
 		if (this.OutputDoorLocation == null) {
+			this.OutputBBox = tryFindEnclosedSpaceFromDoor(doorPos);
+			if (this.OutputBBox == null)
+				return false;
+
 			this.OutputDoorLocation = doorPos;
-			this.OutputBBox = new AABB(doorPos);
 			slidingDoorBlockEntity.linkSCP914(this.getBlockPos());
 			openDoor(doorPos);
 			return true;
@@ -258,42 +267,92 @@ public class SCP914BlockEntity extends BlockEntity {
 	 * @return True if the current door configuration is valid, false if ANY are invalid.
 	 */
 	public boolean areDoorsValid() {
-		return isInputDoorValid() && isOutputDoorValid();
+		//	Force Input and Output to be validated at the same time
+		boolean in = isInputDoorValid();
+		boolean out = isOutputDoorValid();
+		return in && out;
 	}
 
+	/**
+	 * Checks if the Input Doors configuration is (still) valid.
+	 *
+	 * @return True if the Input Configuration is valid. False otherwise.
+	 */
 	public boolean isInputDoorValid() {
-		return isDoorValid(InputDoorLocation, InputBBox);
-	}
-
-	public boolean isOutputDoorValid() {
-		return isDoorValid(OutputDoorLocation, OutputBBox);
-	}
-
-	private boolean isDoorValid(BlockPos doorPos, AABB doorBBox) {
-		//	First check if either value is null (for some reason)
-
-		//	If Pos is null, we can safely discard of the AABB
-		if (doorPos == null) {
-			doorBBox = null;
+		//	If Location is null, we can safely discard of the AABB
+		if (InputDoorLocation == null) {
+			InputBBox = null;
 			return false;
 		}
 
-		//	Since the door pos is not null, first check if it is in fact a door
-		if (!(this.getLevel().getBlockEntity(doorPos) instanceof SlidingDoorBlockEntity)) {
+		//	Since the Location is not null, first check if it is in fact a door
+		if (!(this.getLevel().getBlockEntity(InputDoorLocation) instanceof SlidingDoorBlockEntity)) {
 			//	Door is invalid
-			doorPos = null;
-			doorBBox = null;
+			InputDoorLocation = null;
+			InputBBox = null;
 			return false;
 		}
 
-		//	If the AABB is null, try to find the area given the doors location
-		if (doorBBox == null) {
-			//	TODO, for now area is pos
-			doorBBox = new AABB(doorPos);
-			return true;    //	Return early to avoid check of what we just did
+		//	If the AABB is null, we can try to find the AABB from the doors location
+		if (InputBBox == null) {
+			InputBBox = tryFindEnclosedSpaceFromDoor(InputDoorLocation);
+			//	If It's still null, then it failed, so unlink this door
+			if (InputBBox == null) {
+				((SlidingDoorBlockEntity) level.getBlockEntity(InputDoorLocation)).unlinkSCP914();
+				InputDoorLocation = null;
+				return false;
+			}
+		} else {
+			//	Validate that the AABB is still enclosed
+			if (!isAABBEnclosed(InputBBox)) {
+				((SlidingDoorBlockEntity) level.getBlockEntity(InputDoorLocation)).unlinkSCP914();
+				InputDoorLocation = null;
+				InputBBox = null;
+				return false;
+			}
 		}
 
-		//	TODO: Validate if the AABB is still enclosed
+		return true;
+	}
+
+	/**
+	 * Checks if the Output Doors configuration is (still) valid.
+	 *
+	 * @return True if the Output Configuration is valid. False otherwise.
+	 */
+	public boolean isOutputDoorValid() {
+		//	If Location is null, we can safely discard of the AABB
+		if (OutputDoorLocation == null) {
+			OutputBBox = null;
+			return false;
+		}
+
+		//	Since the Location is not null, first check if it is in fact a door
+		if (!(this.getLevel().getBlockEntity(OutputDoorLocation) instanceof SlidingDoorBlockEntity)) {
+			//	Door is invalid
+			OutputDoorLocation = null;
+			OutputBBox = null;
+			return false;
+		}
+
+		//	If the AABB is null, we can try to find the AABB from the doors location
+		if (OutputBBox == null) {
+			OutputBBox = tryFindEnclosedSpaceFromDoor(OutputDoorLocation);
+			//	If It's still null, then it failed, so unlink this door
+			if (OutputBBox == null) {
+				((SlidingDoorBlockEntity) level.getBlockEntity(OutputDoorLocation)).unlinkSCP914();
+				OutputDoorLocation = null;
+				return false;
+			}
+		} else {
+			//	Validate that the AABB is still enclosed
+			if (!isAABBEnclosed(OutputBBox)) {
+				((SlidingDoorBlockEntity) level.getBlockEntity(OutputDoorLocation)).unlinkSCP914();
+				OutputDoorLocation = null;
+				OutputBBox = null;
+				return false;
+			}
+		}
 
 		return true;
 	}
@@ -317,11 +376,9 @@ public class SCP914BlockEntity extends BlockEntity {
 
 		for (AABB bb : boundingBoxes) {
 			for (BlockPos pos : Utils.boundingBoxToPositions(bb)) {
-				if (level.getBlockState(pos).getBlock().isCollisionShapeFullBlock(level.getBlockState(pos), level, pos) || level.getBlockState(pos).getBlock() instanceof SlidingDoorBlock) {
-					//  OK
-				} else {
+				//	If the surrounding block is not a full block AND not a sliding door, then we fail the check
+				if (!level.getBlockState(pos).getBlock().isCollisionShapeFullBlock(level.getBlockState(pos), level, pos) && !(level.getBlockState(pos).getBlock() instanceof SlidingDoorBlock))
 					return false;
-				}
 			}
 		}
 
@@ -329,14 +386,98 @@ public class SCP914BlockEntity extends BlockEntity {
 	}
 
 	/**
-	 * Given a doors position, attempt to find the enclosed space
+	 * Traverses the given directionToSearch to find the min and max positions, giving back an AABB.
+	 * It's a really simple search that should cover most cases, but doesn't check for if it's a cube.
 	 *
-	 * @param pos
-	 * @return
+	 * @param startingPos Position the search starts at.
+	 * @param directionToSearch Directions to navigate.
+	 * @return AABB of the space.
+	 */
+	private AABB simpleSpaceSearch(BlockPos startingPos, List<Direction> directionToSearch) {
+		AABB space = new AABB(startingPos);
+		BlockPos currentPos;
+		for (Direction dir : directionToSearch) {
+			//	Changing direction makes Positive and Negatives clash, meaning our currentPos will be out of sync with the min/max of space
+			//	Before we start to expand the space, depending on if this is a positive or negative direction, ensure we are on the correct min/max values
+			if (dir.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
+				currentPos = new BlockPos((int) (space.maxX - 1), (int) (space.maxY - 1), (int) (space.maxZ - 1));
+			} else {
+				currentPos = new BlockPos((int) (space.minX), (int) (space.minY), (int) (space.minZ));
+			}
+
+			//	Keep expanding in this direction until we're too big, or we've hit a wall
+			while (!level.getBlockState(currentPos.relative(dir)).getBlock().isCollisionShapeFullBlock(level.getBlockState(currentPos.relative(dir)), level, currentPos.relative(dir))) {
+
+				space = space.expandTowards(Vec3.atLowerCornerOf(dir.getNormal()));
+				currentPos = currentPos.relative(dir);
+
+				//	Check the space isn't too big
+				if (space.getXsize() > MAX_ENCLOSED_SIZE || space.getYsize() > MAX_ENCLOSED_SIZE || space.getZsize() > MAX_ENCLOSED_SIZE)
+					return null;
+			}
+		}
+
+		return space;
+	}
+
+	/**
+	 * Given a Sliding Doors position, attempt to find an enclosed space.
+	 * Currently only supports square enclosed spaces.
+	 *
+	 * @param pos The door to check for an enclosed area.
+	 * @return The Enclosed AABB for this door.
 	 */
 	@Nullable
-	private AABB tryFindEnclosedSpacePos(BlockPos pos) {
-		return null;
+	private AABB tryFindEnclosedSpaceFromDoor(BlockPos pos) {
+		//	First, check we are actually on a SlidingDoor
+		BlockState doorState = level.getBlockState(pos);
+		if (!(doorState.getBlock() instanceof SlidingDoorBlock))
+			return null;
+
+		//	Sanity check to see if we are on the bottom of the door
+		if (!(level.getBlockEntity(pos) instanceof SlidingDoorBlockEntity))
+			pos = pos.below();
+
+		//	Since we don't know what side the enclosed space is going to be, we need to search both sides.
+		//	Sliding doors can also be on 2 Axis, X and Z, so account for that
+		Direction.Axis doorAxis = doorState.getValue(SlidingDoorBlock.HORIZONTAL_AXIS);
+		@Nullable AABB positiveSpace = null;
+		@Nullable AABB negativeSpace = null;
+
+		//	Positive Axis
+		//	Check if the door is unobstructed
+		if (level.isEmptyBlock(pos.relative(doorAxis, 1)) && level.isEmptyBlock(pos.above().relative(doorAxis, 1))) {
+			//	Get all directions and filter out this Axis' Negative direction (to prevent going back on ourselves)
+			List<Direction> positiveDirections = Stream.of(Direction.values()).filter(direction ->
+					!doorAxis.test(direction) || (doorAxis.test(direction) && direction.getAxisDirection() != Direction.AxisDirection.NEGATIVE)
+			).toList();
+			positiveSpace = simpleSpaceSearch(pos.relative(doorAxis, 1), positiveDirections);
+		}
+
+		//	Negative Axis
+		//	Check if the door is unobstructed
+		if (level.isEmptyBlock(pos.relative(doorAxis, -1)) && level.isEmptyBlock(pos.above().relative(doorAxis, -1))) {
+			//	Get all directions and filter out this Axis' Positive direction (to prevent going back on ourselves)
+			List<Direction> negativeDirections = Stream.of(Direction.values()).filter(direction ->
+					!doorAxis.test(direction) || (doorAxis.test(direction) && direction.getAxisDirection() != Direction.AxisDirection.POSITIVE)
+			).toList();
+			negativeSpace = simpleSpaceSearch(pos.relative(doorAxis, -1), negativeDirections);
+		}
+
+		//	Ensure both spaces are enclosed
+		if (positiveSpace != null && !isAABBEnclosed(positiveSpace))
+			positiveSpace = null;
+		if (negativeSpace != null && !isAABBEnclosed(negativeSpace))
+			negativeSpace = null;
+
+		//	Return the smallest non-null space
+		if (positiveSpace == null && negativeSpace == null)
+			return null;
+		if (positiveSpace == null)
+			return negativeSpace;
+		if (negativeSpace == null)
+			return positiveSpace;
+		return positiveSpace.getSize() < negativeSpace.getSize() ? positiveSpace : negativeSpace;
 	}
 
 	/**
