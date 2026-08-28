@@ -73,11 +73,12 @@ public final class Utils {
 	 * @return List of positions that are inside a given AABB
 	 */
 	public static List<BlockPos> boundingBoxToPositions(AABB box) {
+		//	Assuming the AABB is aligned to the blocks, min will correctly denote the minimum position, max however, is at the top corner, meaning its one over on every axis
 		List<BlockPos> positions = new ArrayList<>();
-		for (double x = box.minX; x <= box.maxX; x++) {
-			for (double y = box.minY; y <= box.maxY; y++) {
-				for (double z = box.minZ; z <= box.maxZ; z++) {
-					positions.add(new BlockPos((int) x, (int) y, (int) z)); //  TODO make sure that the values round up or down and it works correctly
+		for (double x = box.minX; x <= box.maxX - 1; x++) {
+			for (double y = box.minY; y <= box.maxY - 1; y++) {
+				for (double z = box.minZ; z <= box.maxZ - 1; z++) {
+					positions.add(new BlockPos((int) x, (int) y, (int) z));
 				}
 			}
 		}
