@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -188,6 +189,7 @@ public class SCP914BlockEntity extends BlockEntity {
 			if (CraftingTime == 70) {
 				this.level.playSound(null, worldPosition, SCPSounds.SCP914_REFINING_STOP.get(), SoundSource.BLOCKS, 1, 1);
 				CurrentState = MachineState.FINISHING;
+				moveContentToOutput();
 			}
 
 			if (CraftingTime == 0) {
@@ -195,6 +197,25 @@ public class SCP914BlockEntity extends BlockEntity {
 				openDoor(OutputDoorLocation);
 				CurrentState = MachineState.IDLE;
 			}
+		}
+	}
+
+	/**
+	 * Moves all the Items/Entities within the Input Area to the Output Area
+	 */
+	private void moveContentToOutput() {
+		List<Entity> entities = level.getEntities(null, InputBBox);
+		for (Entity entity : entities) {
+			//	Get position within the AABB and normalise
+			double entityNormalizedX = (entity.getX() - InputBBox.minX) / (InputBBox.maxX - InputBBox.minX);
+			double entityNormalizedY = (entity.getY() - InputBBox.minY) / (InputBBox.maxY - InputBBox.minY);
+			double entityNormalizedZ = (entity.getZ() - InputBBox.minZ) / (InputBBox.maxZ - InputBBox.minZ);
+
+			//	Teleport to Denormalized Coord on Output
+			double entityXOutput = OutputBBox.minX + (entityNormalizedX * (OutputBBox.maxX - OutputBBox.minX));
+			double entityYOutput = OutputBBox.minY + (entityNormalizedY * (OutputBBox.maxY - OutputBBox.minY));
+			double entityZOutput = OutputBBox.minZ + (entityNormalizedZ * (OutputBBox.maxZ - OutputBBox.minZ));
+			entity.teleportTo(entityXOutput, entityYOutput, entityZOutput);
 		}
 	}
 
