@@ -289,6 +289,10 @@ public class LockdownLangProvider extends LanguageProvider {
 
 			add(SCPBlocks.SCP902, "SCP-902");
 
+			add(SCPBlocks.SCP914, "SCP-914");
+			add(SCPBlocks.SCP914_METAL, "SCP-914 Metal");
+			add(SCPBlocks.SCP914_GEARS, "SCP-914 Gears");
+
 			//Functional Blocks\\
 
 			add(SCPBlocks.CARD_READER, "Keycard Reader");
