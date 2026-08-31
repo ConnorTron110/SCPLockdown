@@ -113,6 +113,8 @@ public class SCPs {
 				.addBlocks(SCPBlocks.SCP822));
 		register(builder("902", "The Final Countdown", SCPObjectClass.KETER)
 				.addBlocks(SCPBlocks.SCP902));
+		register(builder("914", "The Clockworks", SCPObjectClass.SAFE)
+				.addBlocks(SCPBlocks.SCP914, SCPBlocks.SCP914_METAL, SCPBlocks.SCP914_GEARS));
 		register(builder("939", "With Many Voices", SCPObjectClass.KETER)
 				.addEntities(SCPEntities.SCP939));
 	}
