@@ -1,6 +1,7 @@
 package io.github.connortron110.scplockdown.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import io.github.connortron110.scplockdown.SCPLockdown;
 import io.github.connortron110.scplockdown.client.SCPLayerDefinitions;
 import io.github.connortron110.scplockdown.client.models.SCP035MaskModel;
@@ -29,7 +30,7 @@ public class SCP035CaseRenderer implements BlockEntityRenderer<SCP035CaseBlockEn
 		this.model = new SCP035MaskModel(pContext.bakeLayer(SCPLayerDefinitions.SCP035));
 	}
 
-	private static final Quaternionf MASK_LEAN = new Quaternionf(new AxisAngle4d(Math.toRadians(-20), new Vector3f(1, 0, 0)));
+	private static final Quaternionf MASK_LEAN = Axis.XP.rotationDegrees(-20);
 
 	@Override
 	public void render(SCP035CaseBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
@@ -44,7 +45,7 @@ public class SCP035CaseRenderer implements BlockEntityRenderer<SCP035CaseBlockEn
 			//	Centre the mask and rotate depending on facing value (North | South is swapped)
 			pPoseStack.pushPose();
 			ClientUtils.blockEntityRotation(pPoseStack, 1D);
-			pPoseStack.mulPose(new Quaternionf(new AxisAngle4d(Math.toRadians(state.getValue(SCP035GlassCaseBlock.FACING).toYRot()), new Vector3f(0, 1, 0))));
+			pPoseStack.mulPose(Axis.YP.rotationDegrees(state.getValue(SCP035GlassCaseBlock.FACING).toYRot()));
 
 			//	Offset and lean on post
 			pPoseStack.translate(0F, 0F, 0.35F);

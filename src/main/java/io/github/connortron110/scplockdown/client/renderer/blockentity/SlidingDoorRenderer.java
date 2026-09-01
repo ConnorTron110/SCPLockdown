@@ -2,6 +2,7 @@ package io.github.connortron110.scplockdown.client.renderer.blockentity;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import io.github.connortron110.scplockdown.SCPLockdown;
 import io.github.connortron110.scplockdown.client.SCPLayerDefinitions;
 import io.github.connortron110.scplockdown.client.models.SlidingDoorModel;
@@ -42,8 +43,8 @@ public class SlidingDoorRenderer implements BlockEntityRenderer<SlidingDoorBlock
 		this.doorModel = new SlidingDoorModel(pContext.bakeLayer(SCPLayerDefinitions.SLIDING_DOOR));
 	}
 
-	private static final Quaternionf AXIS_SWAP = new Quaternionf(new AxisAngle4d(Math.toRadians(-90), new Vector3f(0, 1, 0)));
-	private static final Quaternionf HINGE_FLIP = new Quaternionf(new AxisAngle4d(Math.toRadians(180), new Vector3f(0, 1, 0)));
+	private static final Quaternionf AXIS_SWAP = Axis.YP.rotationDegrees(-90);
+	private static final Quaternionf HINGE_FLIP = Axis.YP.rotationDegrees(180);
 
 	@Override
 	public void render(SlidingDoorBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {

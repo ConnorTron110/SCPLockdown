@@ -1,6 +1,7 @@
 package io.github.connortron110.scplockdown.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import io.github.connortron110.scplockdown.SCPLockdown;
 import io.github.connortron110.scplockdown.client.SCPLayerDefinitions;
 import io.github.connortron110.scplockdown.client.models.LockerModel;
@@ -50,9 +51,7 @@ public class LockerRenderer implements BlockEntityRenderer<LockerBlockEntity> {
 
 		pPoseStack.pushPose();
 		ClientUtils.blockEntityRotation(pPoseStack, 1.0D);
-		Quaternionf rotation = new Quaternionf(new AxisAngle4d(Math.toRadians(direction.getOpposite().toYRot()), new Vector3f(0, 1, 0)));
-		rotation.mul(rotation);
-		pPoseStack.mulPose(rotation);
+		pPoseStack.mulPose(Axis.YP.rotationDegrees(direction.getOpposite().toYRot()));
 		float doorOpenness = pBlockEntity.getOpenNess(pPartialTick);
 		doorOpenness = 1.0F - doorOpenness;
 		doorOpenness = 1.0F - doorOpenness * doorOpenness * doorOpenness;

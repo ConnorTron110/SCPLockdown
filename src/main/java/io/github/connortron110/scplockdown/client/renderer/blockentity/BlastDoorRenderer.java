@@ -1,6 +1,7 @@
 package io.github.connortron110.scplockdown.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import io.github.connortron110.scplockdown.SCPLockdown;
 import io.github.connortron110.scplockdown.client.SCPLayerDefinitions;
 import io.github.connortron110.scplockdown.client.models.BlastDoorModel;
@@ -32,7 +33,7 @@ public class BlastDoorRenderer implements BlockEntityRenderer<BlastDoorBlockEnti
 		this.doorModel = new BlastDoorModel(pContext.bakeLayer(SCPLayerDefinitions.BLAST_DOOR));
 	}
 
-	private static final Quaternionf AXIS_SWAP = new Quaternionf(new AxisAngle4d(Math.toRadians(-90), new Vector3f(0, 1, 0)));
+	private static final Quaternionf AXIS_SWAP = Axis.YP.rotationDegrees(-90);
 
 	@Override
 	public void render(BlastDoorBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
