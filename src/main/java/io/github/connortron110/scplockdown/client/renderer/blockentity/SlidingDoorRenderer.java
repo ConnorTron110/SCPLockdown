@@ -21,9 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
-import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 public class SlidingDoorRenderer implements BlockEntityRenderer<SlidingDoorBlockEntity> {
 
@@ -48,10 +46,13 @@ public class SlidingDoorRenderer implements BlockEntityRenderer<SlidingDoorBlock
 
 	@Override
 	public void render(SlidingDoorBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-		if (!pBlockEntity.hasLevel()) return;
+		if (!pBlockEntity.hasLevel()) {
+			this.doorModel.renderToBuffer(pPoseStack, SLIDING_DOOR_MATERIALS.getOrDefault(pBlockEntity.getBlockState().getBlock(), null).buffer(pBuffer, RenderType::entitySolid), pPackedLight, pPackedOverlay, 1, 1, 1, 1);
+			return;
+		}
 
 		Material renderMaterial = SLIDING_DOOR_MATERIALS.getOrDefault(pBlockEntity.getBlockState().getBlock(), null);
-		if (renderMaterial == null) return; //  In case the block in the world somehow was not a sliding door block
+		if (renderMaterial == null) return;	//	In case the block in the world somehow was not a sliding door block
 		Direction.Axis axis = pBlockEntity.getBlockState().getValue(SlidingDoorBlock.HORIZONTAL_AXIS);
 		DoorHingeSide hinge = pBlockEntity.getBlockState().getValue(SlidingDoorBlock.HINGE);
 
@@ -60,7 +61,7 @@ public class SlidingDoorRenderer implements BlockEntityRenderer<SlidingDoorBlock
 		if (axis == Direction.Axis.X) pPoseStack.mulPose(AXIS_SWAP);
 		if (hinge == DoorHingeSide.RIGHT) pPoseStack.mulPose(HINGE_FLIP);
 		float position = (pBlockEntity.getOpenProgress()) * 1F / (SlidingDoorBlockEntity.MAX_OPEN);
-		position = Mth.clamp(position, 0, 0.99F);	//	Clamp the door so it doesn't clip into the neighboring block
+		position = Mth.clamp(position, 0, 0.99F);	//	Clamp the door so it doesn't clip into the neighbouring block
 		pPoseStack.translate(position, 0, 0);
 		this.doorModel.renderToBuffer(pPoseStack, renderMaterial.buffer(pBuffer, RenderType::entitySolid), pPackedLight, pPackedOverlay, 1, 1, 1, 1);
 		pPoseStack.popPose();

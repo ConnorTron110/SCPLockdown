@@ -16,9 +16,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 public class SCP035CaseRenderer implements BlockEntityRenderer<SCP035CaseBlockEntity> {
 
@@ -27,7 +25,7 @@ public class SCP035CaseRenderer implements BlockEntityRenderer<SCP035CaseBlockEn
 	private final SCP035MaskModel model;
 
 	public SCP035CaseRenderer(BlockEntityRendererProvider.Context pContext) {
-		this.model = new SCP035MaskModel(pContext.bakeLayer(SCPLayerDefinitions.SCP035));
+		this.model = new SCP035MaskModel(pContext.bakeLayer(SCPLayerDefinitions.SCP035_MASK));
 	}
 
 	private static final Quaternionf MASK_LEAN = Axis.XP.rotationDegrees(-20);

@@ -43,7 +43,7 @@ public class SCPLayerDefinitions {
 
 	public static final ModelLayerLocation SCP019 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp019"), "main");
 	public static final ModelLayerLocation SCP023 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp023"), "main");
-	public static final ModelLayerLocation SCP035 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp035"), "main");
+	public static final ModelLayerLocation SCP035_MASK = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp035_mask"), "main");
 	public static final ModelLayerLocation SCP049 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp049"), "main");
 	public static final ModelLayerLocation SCP053 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp053"), "main");
 	public static final ModelLayerLocation SCP939 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp939"), "main");
@@ -63,7 +63,7 @@ public class SCPLayerDefinitions {
 
 		event.registerLayerDefinition(SCP019, SCP019Model::createBodyLayer);
 		event.registerLayerDefinition(SCP023, SCP023Model::createBodyLayer);
-		event.registerLayerDefinition(SCP035, SCP035MaskModel::createBodyLayer);
+		event.registerLayerDefinition(SCP035_MASK, SCP035MaskModel::createBodyLayer);
 		event.registerLayerDefinition(SCP049, SCP049Model::createBodyLayer);
 		event.registerLayerDefinition(SCP053, SCP053Model::createBodyLayer);
 		event.registerLayerDefinition(SCP939, SCP939Model::createBodyLayer);

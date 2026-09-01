@@ -18,9 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.AxisAngle4d;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +36,11 @@ public class LockerRenderer implements BlockEntityRenderer<LockerBlockEntity> {
 
 	@Override
 	public void render(LockerBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-		if (!pBlockEntity.hasLevel()) return;
+		if (!pBlockEntity.hasLevel()) {
+			this.model.renderToBuffer(pPoseStack, LOCKER_MATERIALS.get(0).buffer(pBuffer, RenderType::entityCutoutNoCull), pPackedLight, pPackedOverlay, 1, 1, 1, 1);
+			return;
+		}
+
 		Direction direction = Direction.NORTH;
 		Material renderMaterial = LOCKER_MATERIALS.get(0);
 

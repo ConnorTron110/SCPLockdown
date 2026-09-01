@@ -3,6 +3,8 @@
 - Sliding doors now play sound when activated on the top half
 - Sliding doors no longer z-fight when opening
 - SCP-023s how now moves with SCP-023
+- Added SCP-035 Mask Model
+- Fixed *most* custom model inventory icons being missing textures
 
 # 3.0.0-26w06a
 - Fixed server side crash relating to card readers

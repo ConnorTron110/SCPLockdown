@@ -16,11 +16,9 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
-//FIXME Does not render when player dies, but comes back on reload of block?!??!!
+//	FIXME Does not render when player dies, but comes back on reload of block?!??!! (issue from 1.16.5)
 public class BlastDoorRenderer implements BlockEntityRenderer<BlastDoorBlockEntity> {
 
 	public static final Material CLOSED_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "entity/block/blastdoor/blast_door_closed"));
@@ -37,7 +35,10 @@ public class BlastDoorRenderer implements BlockEntityRenderer<BlastDoorBlockEnti
 
 	@Override
 	public void render(BlastDoorBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-		if (!pBlockEntity.hasLevel()) return;
+		if (!pBlockEntity.hasLevel()) {
+			this.doorModel.renderToBuffer(pPoseStack, CLOSED_MATERIAL.buffer(pBuffer, RenderType::entitySolid), pPackedLight, pPackedOverlay, 1, 1, 1, 1);
+			return;
+		}
 
 		pPoseStack.pushPose();
 		ClientUtils.blockEntityRotation(pPoseStack, 1.0D);
