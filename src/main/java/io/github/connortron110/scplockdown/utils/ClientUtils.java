@@ -80,9 +80,9 @@ public class ClientUtils {
 	}
 
 	/**
-	 * Most tile entities seem to require the same amount of translation in order to render them correctly.
+	 * Most blockentities seem to require the same amount of translation in order to render them correctly.
 	 */
-	public static void tileEntityRotation(PoseStack poseStack, double heightOffset) {
+	public static void blockEntityRotation(PoseStack poseStack, double heightOffset) {
 		poseStack.translate(0.5D, 0.5D, 0.5D);
 		poseStack.scale(1.0F, -1.0F, -1.0F);
 		poseStack.translate(0.0D, -heightOffset, 0.0D);

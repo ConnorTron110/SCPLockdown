@@ -1,19 +1,13 @@
 package io.github.connortron110.scplockdown.client;
 
 import io.github.connortron110.scplockdown.SCPLockdown;
-import io.github.connortron110.scplockdown.client.models.BlastDoorModel;
-import io.github.connortron110.scplockdown.client.models.LockerModel;
-import io.github.connortron110.scplockdown.client.models.SCP914KeyKnobModel;
-import io.github.connortron110.scplockdown.client.models.SlidingDoorModel;
+import io.github.connortron110.scplockdown.client.models.*;
 import io.github.connortron110.scplockdown.client.models.entity.*;
-import io.github.connortron110.scplockdown.client.renderer.blockentity.SCP914KeyKnobRenderer;
+import io.github.connortron110.scplockdown.client.renderer.blockentity.*;
 import io.github.connortron110.scplockdown.client.renderer.entity.RendererGenericEntity;
 import io.github.connortron110.scplockdown.client.renderer.entity.SCP019EntityRenderer;
 import io.github.connortron110.scplockdown.client.renderer.entity.SCP023EntityRenderer;
 import io.github.connortron110.scplockdown.client.renderer.entity.SCP049PlayerEntityRenderer;
-import io.github.connortron110.scplockdown.client.renderer.blockentity.BlastDoorRenderer;
-import io.github.connortron110.scplockdown.client.renderer.blockentity.LockerRenderer;
-import io.github.connortron110.scplockdown.client.renderer.blockentity.SlidingDoorRenderer;
 import io.github.connortron110.scplockdown.level.entity.ChairEntity;
 import io.github.connortron110.scplockdown.registration.SCPBlockEntities;
 import io.github.connortron110.scplockdown.registration.SCPEntities;
@@ -49,6 +43,7 @@ public class SCPLayerDefinitions {
 
 	public static final ModelLayerLocation SCP019 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp019"), "main");
 	public static final ModelLayerLocation SCP023 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp023"), "main");
+	public static final ModelLayerLocation SCP035 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp035"), "main");
 	public static final ModelLayerLocation SCP049 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp049"), "main");
 	public static final ModelLayerLocation SCP053 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp053"), "main");
 	public static final ModelLayerLocation SCP939 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp939"), "main");
@@ -68,6 +63,7 @@ public class SCPLayerDefinitions {
 
 		event.registerLayerDefinition(SCP019, SCP019Model::createBodyLayer);
 		event.registerLayerDefinition(SCP023, SCP023Model::createBodyLayer);
+		event.registerLayerDefinition(SCP035, SCP035MaskModel::createBodyLayer);
 		event.registerLayerDefinition(SCP049, SCP049Model::createBodyLayer);
 		event.registerLayerDefinition(SCP053, SCP053Model::createBodyLayer);
 		event.registerLayerDefinition(SCP939, SCP939Model::createBodyLayer);
@@ -80,6 +76,7 @@ public class SCPLayerDefinitions {
 		event.registerBlockEntityRenderer(SCPBlockEntities.SLIDING_DOOR.get(), SlidingDoorRenderer::new);
 		event.registerBlockEntityRenderer(SCPBlockEntities.BLAST_DOOR.get(), BlastDoorRenderer::new);
 
+		event.registerBlockEntityRenderer(SCPBlockEntities.SCP035_CASE.get(), SCP035CaseRenderer::new);
 		event.registerBlockEntityRenderer(SCPBlockEntities.SCP914.get(), SCP914KeyKnobRenderer::new);
 
 		//  Entities

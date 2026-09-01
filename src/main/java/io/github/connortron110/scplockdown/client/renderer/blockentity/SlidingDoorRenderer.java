@@ -55,7 +55,7 @@ public class SlidingDoorRenderer implements BlockEntityRenderer<SlidingDoorBlock
 		DoorHingeSide hinge = pBlockEntity.getBlockState().getValue(SlidingDoorBlock.HINGE);
 
 		pPoseStack.pushPose();
-		ClientUtils.tileEntityRotation(pPoseStack, 1D);
+		ClientUtils.blockEntityRotation(pPoseStack, 1D);
 		if (axis == Direction.Axis.X) pPoseStack.mulPose(AXIS_SWAP);
 		if (hinge == DoorHingeSide.RIGHT) pPoseStack.mulPose(HINGE_FLIP);
 		float position = (pBlockEntity.getOpenProgress()) * 1F / (SlidingDoorBlockEntity.MAX_OPEN);

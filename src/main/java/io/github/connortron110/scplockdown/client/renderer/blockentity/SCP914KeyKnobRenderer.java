@@ -30,7 +30,7 @@ public class SCP914KeyKnobRenderer implements BlockEntityRenderer<SCP914BlockEnt
 		if (!pBlockEntity.hasLevel()) return;
 
 		pPoseStack.pushPose();
-		ClientUtils.tileEntityRotation(pPoseStack, 1D);
+		ClientUtils.blockEntityRotation(pPoseStack, 1D);
 		this.Model.Center.yRot = Math.toRadians(pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot());
 
 		this.Model.Knob.zRot = Math.toRadians(pBlockEntity.KnobRotationDegrees - 90);

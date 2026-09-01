@@ -20,10 +20,9 @@ public class SCPRelatedForgeEvents {
 		if (entity.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof SCP035MaskItem) {
 			if (!entity.level().isClientSide) {
 
-				//TODO decrease health overtime to simulate decay
+				//	TODO: decrease health overtime to simulate decay
 
-
-				//Changes expression
+				//	Changes expression
 				if (SCP035MaskItem.shouldChange(entity.getItemBySlot(EquipmentSlot.HEAD))) {
 					SCP035MaskItem.changeExpression(entity.getItemBySlot(EquipmentSlot.HEAD));
 				}

@@ -39,7 +39,7 @@ public class BlastDoorRenderer implements BlockEntityRenderer<BlastDoorBlockEnti
 		if (!pBlockEntity.hasLevel()) return;
 
 		pPoseStack.pushPose();
-		ClientUtils.tileEntityRotation(pPoseStack, 1.0D);
+		ClientUtils.blockEntityRotation(pPoseStack, 1.0D);
 		if (pBlockEntity.getBlockState().getValue(BlastDoorBlock.HORIZONTAL_AXIS).equals(Direction.Axis.X))
 			pPoseStack.mulPose(AXIS_SWAP);
 		float position = (pBlockEntity.getOpenProgress()) * 15F / (BlastDoorBlockEntity.MAX_OPEN);

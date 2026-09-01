@@ -2,6 +2,6 @@
   "parent": "builtin/entity",
   "gui_light": "front",
   "textures": {
-    "particle": "scplockdown:entity/scp035"
+    "particle": "scplockdown:entity/special/scp035"
   }
 }

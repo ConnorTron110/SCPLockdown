@@ -13,6 +13,7 @@ import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.entity.living.LivingEvent;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -23,7 +24,7 @@ public class SCP035MaskItem extends ArmorItem {
 	public static final String COMEDY_TIME_KEY = "ComedyTime";
 	public static final String ATTACHED_TIME = "AttachedTime";
 
-	//TODO Custom Item entity that changes expression and does not de-spawn (And lures entities??)
+	//	TODO Custom Item entity that changes expression and does not de-spawn (And lures entities??)
 
 	public SCP035MaskItem(Properties pProperties) {
 		//super(ArmorMaterials.DIAMOND, Type.HELMET, pProperties.setISTER(DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> () -> ItemModelRenderer::new)));   //  TODO: Probably best to redo the ISTER part
@@ -32,9 +33,9 @@ public class SCP035MaskItem extends ArmorItem {
 
 	@Override
 	public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pItemSlot, boolean pIsSelected) {
-		boolean isWearing = false; //Check if the player is wearing 035
+		boolean isWearing = false;	//	Check if the player is wearing 035
 		Iterator<ItemStack> iter = pEntity.getArmorSlots().iterator();
-		ItemStack wearingStack = ItemStack.EMPTY; //Used to store the stack on the head to avoid shrinking multiple stacks
+		ItemStack wearingStack = ItemStack.EMPTY;	//	Used to store the stack on the head to avoid shrinking multiple stacks
 		while (!isWearing && iter.hasNext()) {
 			ItemStack slot = iter.next();
 			if (slot.getItem() instanceof ArmorItem && ((ArmorItem) slot.getItem()).getType() == Type.HELMET) {
@@ -46,7 +47,7 @@ public class SCP035MaskItem extends ArmorItem {
 		if (pEntity instanceof Player player) {
 			if (!player.getAbilities().invulnerable) {
 				if (!isWearing && !player.isDeadOrDying()) {
-					//If they are not wearing Telekill, swap with what ever helmet they are currently wearing
+					//	If they are not wearing Telekill, swap with whatever helmet they are currently wearing
 					if (!SCP148ArmorItem.isWearingTelekill(player)) {
 						pEntity.setItemSlot(EquipmentSlot.HEAD, pStack.copy());
 						pStack.shrink(1);
@@ -55,16 +56,16 @@ public class SCP035MaskItem extends ArmorItem {
 				}
 
 				if (isWearing) {
-					//Bind so player cannot take off
+					//	Bind so player cannot take off
 					if (!wearingStack.isEnchanted()) {
 						wearingStack.enchant(Enchantments.BINDING_CURSE, 1);
 					}
 
 					pEntity.hurt(SCPDamageTypes.source(pLevel, SCPDamageTypes.SCP035MASK), 8F);
 					if (player.isDeadOrDying()) {
-						wearingStack.removeTagKey("Enchantments"); //Remove Curse of Binding Enchantment
+						wearingStack.removeTagKey("Enchantments");	//	Remove Curse of Binding Enchantment
 
-						//Spawn a new instance of SCP-035
+						//	Spawn a new instance of SCP-035
 						//SCP035VictimEntity victim = SCPEntities.SCP035_VICTIM.get().create(pLevel);
 						//victim.setPos(pEntity.getX(), pEntity.getY(), pEntity.getZ());
 						//victim.setYHeadRot(pEntity.getYHeadRot());
@@ -72,11 +73,11 @@ public class SCP035MaskItem extends ArmorItem {
 						//victim.setItemSlot(EquipmentSlot.HEAD, wearingStack.copy());
 						//pLevel.addFreshEntity(victim);
 
-						wearingStack.shrink(1); //Before death, remove the item from the inventory (to avoid dupe)
+						wearingStack.shrink(1);	//	Before death, remove the item from the inventory (to avoid dupe)
 					}
 				}
 			} else {
-				//Player is invunerable, if the stack has binding, remove it
+				//	Player is invulnerable, if the stack has binding, remove it
 				if (pStack.isEnchanted()) {
 					pStack.removeTagKey("Enchantments");
 				}
@@ -85,20 +86,18 @@ public class SCP035MaskItem extends ArmorItem {
 
 		if (!pLevel.isClientSide && !isWearing) {
 			if (shouldChange(pStack)) {
-				changeExpression(pStack); //TODO Check if this is synced when on a server
+				changeExpression(pStack);	//	TODO Check if this is synced when on a server
 			}
 		}
 	}
 
-	//{@link io.github.connortron110.scplockdown.events.SCPRelatedForgeEvents#scp035(LivingEvent.LivingUpdateEvent)} BAD LINK
-
 	/**
-	 * Expression Changes happen on <LINK> As expression should change on any entity.
+	 * Expression Changes happen on {@link io.github.connortron110.scplockdown.events.SCPRelatedForgeEvents#scp035(LivingEvent.LivingTickEvent)} As expression should change on any entity.
 	 *
 	 * @param stack The stack to change the expression on
 	 */
 	public static void changeExpression(ItemStack stack) {
-		//Safety incase something called this with the incorrect stack
+		//	Safety in case something called this with the incorrect stack
 		if (stack.getItem() instanceof SCP035MaskItem) {
 			NBTWrapper nbt = NBTWrapper.getNBT(stack);
 			nbt.setBoolean(COMEDY_KEY, !nbt.getOrCreateKey(COMEDY_KEY, false));
@@ -183,15 +182,15 @@ public class SCP035MaskItem extends ArmorItem {
 	@Nullable
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-		return SCPLockdown.MOD_ID + ":textures/entity/scp035.png";
+		return SCPLockdown.MOD_ID + ":textures/entity/special/scp035.png";
 	}
 
 	public static boolean shouldChange(ItemStack stack) {
 		if (!(stack.getItem() instanceof SCP035MaskItem))
-			return false; //Safety incase something called this with the incorrect stack
+			return false;	//	Safety in case something called this with the incorrect stack
 		NBTWrapper nbt = NBTWrapper.getNBT(stack);
 		int time = nbt.getOrCreateKey(COMEDY_TIME_KEY, 0);
-		//Will change at least once per minecraft day, initially has a 1 in 100,000 chance but increases as the day goes on
+		//	Will change at least once per minecraft day, initially has a 1 in 100,000 chance but increases as the day goes on
 		boolean result = maskChangeProbability(time++);
 		nbt.setInt(COMEDY_TIME_KEY, time);
 		nbt.save();
@@ -199,7 +198,7 @@ public class SCP035MaskItem extends ArmorItem {
 	}
 
 	public static boolean maskChangeProbability(int x) {
-		//TODO Revert once change has been confirmed server side
-		return RandProbabilityHelper.inverseParabolicProbability(x, 200, 200); //RandProbabilityHelper.inverseParabolicProbability(x, 100000, 240000);
+		//	TODO Revert once change has been confirmed server side
+		return RandProbabilityHelper.inverseParabolicProbability(x, 200, 200);	//	RandProbabilityHelper.inverseParabolicProbability(x, 100000, 240000);
 	}
 }

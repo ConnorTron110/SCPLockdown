@@ -49,7 +49,7 @@ public class LockerRenderer implements BlockEntityRenderer<LockerBlockEntity> {
 		}
 
 		pPoseStack.pushPose();
-		ClientUtils.tileEntityRotation(pPoseStack, 1.0D);
+		ClientUtils.blockEntityRotation(pPoseStack, 1.0D);
 		Quaternionf rotation = new Quaternionf(new AxisAngle4d(Math.toRadians(direction.getOpposite().toYRot()), new Vector3f(0, 1, 0)));
 		rotation.mul(rotation);
 		pPoseStack.mulPose(rotation);

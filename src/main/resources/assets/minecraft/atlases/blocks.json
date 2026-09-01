@@ -4,6 +4,11 @@
       "type": "directory",
       "source": "entity/block",
       "prefix": "entity/block/"
+    },
+    {
+      "type": "directory",
+      "source": "entity/special",
+      "prefix": "entity/special/"
     }
   ]
 }
