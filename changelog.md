@@ -1,5 +1,6 @@
 # 3.0.0-26w
 - Added config option to disallow creative hands from unlocking card readers
+- Lockers and Blast Doors now render correctly
 - Sliding doors now play sound when activated on the top half
 - Sliding doors no longer z-fight when opening
 - SCP-023s how now moves with SCP-023

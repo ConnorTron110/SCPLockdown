@@ -12,7 +12,6 @@ import io.github.connortron110.scplockdown.level.blocks.CardReaderBlock;
 import io.github.connortron110.scplockdown.registration.*;
 import io.github.connortron110.scplockdown.registration.holders.StairSlabWallTriple;
 import io.github.connortron110.scplockdown.utils.LockdownTextComponents;
-import net.minecraft.ChatFormatting;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,9 +24,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.registries.RegistryObject;
 
-public class LockdownLangProvider extends LanguageProvider {
+public class LockdownEnglishLangProvider extends LanguageProvider {
 
-	public LockdownLangProvider(PackOutput output) {
+	public LockdownEnglishLangProvider(PackOutput output) {
 		super(output, SCPLockdown.MOD_ID, "en_us");
 	}
 

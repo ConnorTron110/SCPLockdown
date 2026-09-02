@@ -40,7 +40,7 @@ public class DataGenerators {
 		gen.addProvider(event.includeClient(), new LockdownBlocksStateProvider(packOutput, existingFileHelper));
 		gen.addProvider(event.includeClient(), new LockdownItemModelProvider(packOutput, existingFileHelper));
 
-		gen.addProvider(event.includeClient(), new LockdownLangProvider(packOutput));
+		gen.addProvider(event.includeClient(), new LockdownEnglishLangProvider(packOutput));
 		gen.addProvider(event.includeClient(), new LockdownSoundsProvider(packOutput, existingFileHelper));
 
 		//  We must generate data tags for damage types before we can do things with tags
