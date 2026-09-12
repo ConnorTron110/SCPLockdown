@@ -36,6 +36,7 @@ public class SCPLockdown {
 
 		//  Stuff for config
 		context.registerConfig(ModConfig.Type.COMMON, LockdownConfig.COMMON_SPEC);
+		context.registerConfig(ModConfig.Type.CLIENT, LockdownConfig.CLIENT_SPEC);
 
 		//FIXME Causes Client to brick world
 		//remappingWorldHook = new RemappingWorldHook();

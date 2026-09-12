@@ -1,5 +1,6 @@
 package io.github.connortron110.scplockdown.level.blockentity;
 
+import io.github.connortron110.scplockdown.LockdownConfig;
 import io.github.connortron110.scplockdown.level.blocks.SlidingDoorBlock;
 import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.CBSCP914Refining;
@@ -116,12 +117,12 @@ public class SCP914BlockEntity extends BlockEntity {
 	 */
 	public boolean tryKnob(Player player) {
 		if (CurrentState != MachineState.IDLE) {
-			player.displayClientMessage(LockdownTextComponents.SCP914_BUSY, true);
+			showPlayerMessage(player, LockdownTextComponents.SCP914_BUSY);
 			return false;
 		}
 
 		CurrentSetting = CurrentSetting.cycleSetting();
-		player.displayClientMessage(CurrentSetting.getSettingMessage(), true);
+		showPlayerMessage(player, CurrentSetting.getSettingMessage());
 		return true;
 	}
 
@@ -132,12 +133,12 @@ public class SCP914BlockEntity extends BlockEntity {
 	 */
 	public boolean tryKey(Player player) {
 		if (!areDoorsValid()) {
-			player.displayClientMessage(LockdownTextComponents.SCP914_LINK_REQUIRED, true);
+			showPlayerMessage(player, LockdownTextComponents.SCP914_LINK_REQUIRED);
 			return false;
 		}
 
 		if (CurrentState != MachineState.IDLE) {
-			player.displayClientMessage(LockdownTextComponents.SCP914_BUSY, true);
+			showPlayerMessage(player, LockdownTextComponents.SCP914_BUSY);
 			return false;
 		}
 
@@ -217,6 +218,11 @@ public class SCP914BlockEntity extends BlockEntity {
 			double entityZOutput = OutputBBox.minZ + (entityNormalizedZ * (OutputBBox.maxZ - OutputBBox.minZ));
 			entity.teleportTo(entityXOutput, entityYOutput, entityZOutput);
 		}
+	}
+
+	private void showPlayerMessage(Player player, MutableComponent message) {
+		if (LockdownConfig.CLIENT.shouldSCP914ShowTips())
+			player.displayClientMessage(message, true);
 	}
 
 	/**
