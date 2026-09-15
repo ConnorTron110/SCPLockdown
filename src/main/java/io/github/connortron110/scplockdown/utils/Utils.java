@@ -23,14 +23,17 @@ import java.util.List;
 
 public final class Utils {
 
+	@Deprecated
 	public static VoxelShape[] makeHorizontalShapes(VoxelShape northShape) {
 		return new VoxelShape[]{rotateShape(Direction.SOUTH, northShape), rotateShape(Direction.WEST, northShape), northShape, rotateShape(Direction.EAST, northShape)};
 	}
 
+	@Deprecated
 	public static VoxelShape[] makeHorizontalAxisShapes(VoxelShape northShape) {
 		return new VoxelShape[]{northShape, rotateShapeY(northShape, 90)};
 	}
 
+	@Deprecated
 	private static VoxelShape rotateShape(Direction to, VoxelShape shape) {
 		VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
 		int times = (to.get2DDataValue() - Direction.NORTH.get2DDataValue() + 4) % 4;
@@ -44,6 +47,7 @@ public final class Utils {
 		return buffer[0];
 	}
 
+	@Deprecated
 	public static VoxelShape rotateShapeY(VoxelShape shape, double angle) {
 		VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
 		int times = Mth.floor(angle / 90.0D);
