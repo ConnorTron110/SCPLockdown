@@ -7,6 +7,7 @@
 - Added SCP-035 Mask Model
 - Fixed *most* custom model inventory icons being missing textures
 - Added SCP-914
+- Added French Translations (Thanks destroyer12100_08425)
 
 # 3.0.0-26w06a
 - Fixed server side crash relating to card readers
