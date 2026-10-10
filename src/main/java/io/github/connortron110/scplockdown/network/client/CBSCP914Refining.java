@@ -13,25 +13,33 @@ import java.util.function.Supplier;
 public class CBSCP914Refining implements ISCPPacket {
 
 	private final BlockPos SCP914Pos;
+	private final int CraftingTime;
 
-	public CBSCP914Refining(BlockPos scp914Pos) {
+	public CBSCP914Refining(BlockPos scp914Pos, int craftingTime) {
 		this.SCP914Pos = scp914Pos;
+		this.CraftingTime = craftingTime;
 	}
 
 	@SuppressWarnings("unused")
 	public CBSCP914Refining(FriendlyByteBuf buffer) {
-		this(BlockPos.of(buffer.readLong()));
+		this(BlockPos.of(buffer.readLong()), buffer.readInt());
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeLong(SCP914Pos.asLong());
+		buffer.writeInt(CraftingTime);
 	}
 
 	@Override
 	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> Minecraft.getInstance().getSoundManager().play(new SCP914TickingSoundInstance((SCP914BlockEntity) Minecraft.getInstance().level.getBlockEntity(SCP914Pos))));
+		context.enqueueWork(() -> {
+			if (Minecraft.getInstance().level.getBlockEntity(SCP914Pos) instanceof SCP914BlockEntity scp914BlockEntity) {
+				scp914BlockEntity.CraftingTime = CraftingTime;
+				Minecraft.getInstance().getSoundManager().play(new SCP914TickingSoundInstance(scp914BlockEntity));
+			}
+		});
 		return true;
 	}
 }

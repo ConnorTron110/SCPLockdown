@@ -2,10 +2,11 @@
 - Added config option to disallow creative hands from unlocking card readers
 - Lockers and Blast Doors now render correctly
 - Sliding doors now play sound when activated on the top half
-- Sliding doors no longer z-fight when opening
-- SCP-023s how now moves with SCP-023
+- Sliding doors no longer z-fight when opened
+- SCP-023s howl now moves with SCP-023
 - Added SCP-035 Mask Model
 - Fixed *most* custom model inventory icons being missing textures
+- Added SCP-914
 
 # 3.0.0-26w06a
 - Fixed server side crash relating to card readers

@@ -2,6 +2,7 @@ package io.github.connortron110.scplockdown.level.blockentity;
 
 import io.github.connortron110.scplockdown.LockdownConfig;
 import io.github.connortron110.scplockdown.level.blocks.SlidingDoorBlock;
+import io.github.connortron110.scplockdown.level.recipe.SCP914Recipe;
 import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.CBSCP914Refining;
 import io.github.connortron110.scplockdown.registration.SCPBlockEntities;
@@ -10,6 +11,7 @@ import io.github.connortron110.scplockdown.utils.LockdownTextComponents;
 import io.github.connortron110.scplockdown.utils.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
@@ -17,14 +19,22 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.network.PacketDistributor;
+import org.apache.commons.compress.utils.Lists;
 
 import javax.annotation.Nullable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -36,6 +46,7 @@ public class SCP914BlockEntity extends BlockEntity {
 	 */
 	private static final int START_UP_TIME = 20;
 	private static final int TICKS_FOR_DOORS_TO_MOVE = SlidingDoorBlockEntity.TIME_TO_OPEN;
+	private static final int STOP_TIME = 70;
 	/**
 	 * Determines how large a single dimension of the Area an Input/Output can be.
 	 */
@@ -72,7 +83,7 @@ public class SCP914BlockEntity extends BlockEntity {
 	/**
 	 * Used to actually count the crafting time, and is set once the doors have closed and ingredients have been identified.
 	 */
-	private int CraftingTime = 0;
+	public int CraftingTime = 0;
 
 	//	Input / Output Locations
 	@Nullable private BlockPos InputDoorLocation;
@@ -175,10 +186,25 @@ public class SCP914BlockEntity extends BlockEntity {
 
 			if (StartUpDelay == 0) {
 				CurrentState = MachineState.PROCESSING;
-				//	TODO: Items are now in the machine, we can set the time to craft properly now
-				if (!level.isClientSide)
-					SCPNetwork.NETWORK.send(PacketDistributor.DIMENSION.with(() -> level.dimension()), new CBSCP914Refining(getBlockPos()));
-				CraftingTime = 235;
+
+				//	For client side, set crafting time to 2 seconds to allow packet to be synced. Not the most elegant solution but will work in 99% of cases.
+				CraftingTime = 140;
+
+				if (!level.isClientSide) {
+					List<SCP914Recipe> recipes = getAllPossibleRecipes();
+					if (recipes.isEmpty()) {
+						//	Invalid Recipe, so just default to min time to stop (+1 to allow the finishing sound to play)
+						CraftingTime = STOP_TIME + 1;
+					} else {
+						CraftingTime = recipes.stream().max(Comparator.comparingInt(SCP914Recipe::getCraftingTime)).get().getCraftingTime();
+
+						//	Clamp time to craft to the stop time
+						if (CraftingTime <= STOP_TIME)
+							CraftingTime = STOP_TIME + 1;
+					}
+
+					SCPNetwork.NETWORK.send(PacketDistributor.DIMENSION.with(() -> level.dimension()), new CBSCP914Refining(getBlockPos(), CraftingTime));
+				}
 			}
 
 			return;
@@ -187,10 +213,19 @@ public class SCP914BlockEntity extends BlockEntity {
 		if (CurrentState == MachineState.PROCESSING || CurrentState == MachineState.FINISHING) {
 			CraftingTime--;
 
-			if (CraftingTime == 70) {
+			if (CraftingTime == STOP_TIME) {
 				this.level.playSound(null, worldPosition, SCPSounds.SCP914_REFINING_STOP.get(), SoundSource.BLOCKS, 1, 1);
 				CurrentState = MachineState.FINISHING;
-				moveContentToOutput();
+
+				//	While we still have ANY recipe, keep consuming one recipe at a time
+				while (!getAllPossibleRecipes().stream().filter(r -> r.getSetting() == CurrentSetting).toList().isEmpty()) {
+					//	Get the most expensive recipe
+					SCP914Recipe recipeToConsume = getAllPossibleRecipes().stream().filter(r -> r.getSetting() == CurrentSetting).max(Comparator.comparingInt(scp914Recipe -> scp914Recipe.getIngredients().size())).get();
+					consumeRecipe(recipeToConsume);
+				}
+
+				//	Move any entities that have not been consumed by recipes
+				moveRemainingContentToOutput();
 			}
 
 			if (CraftingTime == 0) {
@@ -202,24 +237,112 @@ public class SCP914BlockEntity extends BlockEntity {
 	}
 
 	/**
-	 * Moves all the Items/Entities within the Input Area to the Output Area
+	 * Consumes the given recipe. Assumes contents with {@link SCP914BlockEntity#InputBBox} match the ingredients.
+	 *
+	 * @param recipe The recipe to apply.
 	 */
-	private void moveContentToOutput() {
+	private void consumeRecipe(SCP914Recipe recipe) {
+		List<Vec3> positions = Lists.newArrayList();
+
+		//	First we need to shrink all the items in the input to "consume" items
+		for (Ingredient ing : recipe.getIngredients()) {
+			boolean hasProcessedIngredient = false;
+			for (ItemStack stack : ing.getItems()) {
+				if (hasProcessedIngredient) continue;	//	If this ingredient has been processed, skip the rest of this inner section
+
+				List<ItemEntity> inputItems = level.getEntities(null, InputBBox).stream().filter(e -> e instanceof ItemEntity).map(e -> ((ItemEntity) e)).toList();
+				for (ItemEntity inputItemEntity : inputItems) {
+					if (hasProcessedIngredient) continue;	//	If this ingredient has been processed, skip the rest of this inner section
+					if (ing.test(inputItemEntity.getItem())) {
+						hasProcessedIngredient = true;
+						inputItemEntity.getItem().shrink(stack.getCount());
+						positions.add(new Vec3(inputItemEntity.getX(), inputItemEntity.getY(), inputItemEntity.getZ()));
+					}
+				}
+			}
+		}
+
+		//	Then create the newly crafted item and place it into the output
+		ItemEntity outputItem = EntityType.ITEM.create(level);
+		outputItem.setItem(recipe.getResultItem(level.registryAccess()));
+
+		Vec3 mthPos = Vec3.ZERO;
+		for (Vec3 posToAdd : positions) {
+			mthPos = mthPos.add(posToAdd);
+		}
+		Vec3 inputPos = new Vec3(mthPos.x / positions.size(), mthPos.y / positions.size(), mthPos.z / positions.size());
+		Vec3 outputPosition = getOutputPosition(inputPos);
+		outputItem.setPos(outputPosition.x, outputPosition.y, outputPosition.z);
+
+		level.addFreshEntity(outputItem);
+	}
+
+	/**
+	 * Given all items in the {@link SCP914BlockEntity#InputBBox}, determine what recipes are possible.
+	 * Note, this does include recipes where if one is consumed, there may not be enough items for other recipes.
+	 * This function only returns recipes that have the same refining setting.
+	 *
+	 * @return List of recipes we can craft.
+	 */
+	private List<SCP914Recipe> getAllPossibleRecipes() {
+		List<ItemStack> list = level.getEntities(null, InputBBox).stream().filter(e -> e instanceof ItemEntity).map(e -> ((ItemEntity) e).getItem()).toList();
+		NonNullList<ItemStack> inputs = NonNullList.withSize(list.size(), ItemStack.EMPTY);
+		for (int i = 0; i < inputs.size(); i++) {
+			inputs.set(i, list.get(i));
+		}
+
+		//	Get all recipes, based on input items found
+		List<SCP914Recipe> availableRecipes = this.level.getRecipeManager().getRecipesFor(SCP914Recipe.Type.INSTANCE, new RecipeWrapper(new ItemStackHandler(inputs)), level);
+
+		//	Return a filtered list, that only contains recipes with respect to the current refining setting.
+		return availableRecipes.stream().filter(recipe -> recipe.getSetting() == CurrentSetting).toList();
+	}
+
+	/**
+	 * Returns the position of entity with respect to where it needs to be at output, given its current position within the input.
+	 *
+	 * @param position The Initial Position we want to translate.
+	 * @return The Output position coords.
+	 */
+	private Vec3 getOutputPosition(Vec3 position) {
+		//	Get position within the AABB and normalise
+		double entityNormalizedX = (position.x() - InputBBox.minX) / (InputBBox.maxX - InputBBox.minX);
+		double entityNormalizedY = (position.y() - InputBBox.minY) / (InputBBox.maxY - InputBBox.minY);
+		double entityNormalizedZ = (position.z() - InputBBox.minZ) / (InputBBox.maxZ - InputBBox.minZ);
+
+		//	Teleport to Denormalized Coord on Output
+		double entityXOutput = OutputBBox.minX + (entityNormalizedX * (OutputBBox.maxX - OutputBBox.minX));
+		double entityYOutput = OutputBBox.minY + (entityNormalizedY * (OutputBBox.maxY - OutputBBox.minY));
+		double entityZOutput = OutputBBox.minZ + (entityNormalizedZ * (OutputBBox.maxZ - OutputBBox.minZ));
+		return new Vec3(entityXOutput, entityYOutput, entityZOutput);
+	}
+
+	/**
+	 * Returns the position of entity with respect to where it needs to be at output, given its current position within the input.
+	 *
+	 * @param entity The Entity we want to find the output position for.
+	 * @return The Output position coords.
+	 */
+	private Vec3 getOutputPosition(Entity entity) {
+		return getOutputPosition(entity.position());
+	}
+
+	/**
+	 * Moves all the Items/Entities within the Input Area to the Output Area.
+	 */
+	private void moveRemainingContentToOutput() {
 		List<Entity> entities = level.getEntities(null, InputBBox);
 		for (Entity entity : entities) {
-			//	Get position within the AABB and normalise
-			double entityNormalizedX = (entity.getX() - InputBBox.minX) / (InputBBox.maxX - InputBBox.minX);
-			double entityNormalizedY = (entity.getY() - InputBBox.minY) / (InputBBox.maxY - InputBBox.minY);
-			double entityNormalizedZ = (entity.getZ() - InputBBox.minZ) / (InputBBox.maxZ - InputBBox.minZ);
-
-			//	Teleport to Denormalized Coord on Output
-			double entityXOutput = OutputBBox.minX + (entityNormalizedX * (OutputBBox.maxX - OutputBBox.minX));
-			double entityYOutput = OutputBBox.minY + (entityNormalizedY * (OutputBBox.maxY - OutputBBox.minY));
-			double entityZOutput = OutputBBox.minZ + (entityNormalizedZ * (OutputBBox.maxZ - OutputBBox.minZ));
-			entity.teleportTo(entityXOutput, entityYOutput, entityZOutput);
+			Vec3 outputPosition = getOutputPosition(entity);
+			entity.teleportTo(outputPosition.x, outputPosition.y, outputPosition.z);
 		}
 	}
 
+	/**
+	 * Sends a player a message with respect to the {@link LockdownConfig.Client#scp914Tips} config option.
+	 * @param player The Player we want to send the message to.
+	 * @param message The message itself.
+	 */
 	private void showPlayerMessage(Player player, MutableComponent message) {
 		if (LockdownConfig.CLIENT.shouldSCP914ShowTips())
 			player.displayClientMessage(message, true);
@@ -289,7 +412,6 @@ public class SCP914BlockEntity extends BlockEntity {
 
 	/**
 	 * Validates the Input and output doors to see if they (still) exist.
-	 * This function, unlike the #isXDoorValid checks the inworld configuration of the doors to update internal variables.
 	 *
 	 * @return True if the current door configuration is valid, false if ANY are invalid.
 	 */
@@ -558,6 +680,17 @@ public class SCP914BlockEntity extends BlockEntity {
 				case ONEONE -> LockdownTextComponents.SCP914_SET_ONEONE;
 				case FINE -> LockdownTextComponents.SCP914_SET_FINE;
 				case VERYFINE -> LockdownTextComponents.SCP914_SET_VERYFINE;
+			};
+		}
+
+		public static RefiningSetting fromString(String s) {
+			return switch (s.toLowerCase()) {
+				case "rough", "r" -> ROUGH;
+				case "coarse", "c" -> COARSE;
+				case "onetoone", "1:1", "1" -> ONEONE;
+				case "fine", "f" -> FINE;
+				case "veryfine", "very fine", "very_fine", "vf" -> VERYFINE;
+				default -> throw new IllegalStateException("Unsupported Refining setting value: " + s);
 			};
 		}
 	}
