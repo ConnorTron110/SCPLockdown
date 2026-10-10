@@ -1,4 +1,4 @@
-# 3.0.0-26w
+# 3.0.0-26w41a
 - Added config option to disallow creative hands from unlocking card readers
 - Lockers and Blast Doors now render correctly
 - Sliding doors now play sound when activated on the top half
