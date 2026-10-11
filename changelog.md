@@ -1,3 +1,6 @@
+# 3.0.0-26w41b
+- Fixed Geckolib compatibility issue
+
 # 3.0.0-26w41a
 - Added config option to disallow creative hands from unlocking card readers
 - Lockers and Blast Doors now render correctly

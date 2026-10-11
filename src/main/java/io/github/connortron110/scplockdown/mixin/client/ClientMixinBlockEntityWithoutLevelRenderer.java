@@ -26,7 +26,11 @@ public abstract class ClientMixinBlockEntityWithoutLevelRenderer {
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void ClientMixinBlockEntityWithoutLevelRenderer_init(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet, CallbackInfo ci) {
-		SCPLockdown$RendererInstance = new ItemModelRenderer(pBlockEntityRenderDispatcher, pEntityModelSet);
+		//	Geckolib compatibility fix.
+		//	Their implementation of in hand item models uses an extended version of BlockEntityWithoutLevelRenderer which initialises the class with input values nulled.
+		if (pBlockEntityRenderDispatcher != null && pEntityModelSet != null && SCPLockdown$RendererInstance == null) {
+			SCPLockdown$RendererInstance = new ItemModelRenderer(pBlockEntityRenderDispatcher, pEntityModelSet);
+		}
 	}
 
 	@Inject(method = "onResourceManagerReload", at = @At("TAIL"))
