@@ -1,6 +1,7 @@
 package io.github.connortron110.scplockdown.data.tags;
 
 import io.github.connortron110.scplockdown.SCPLockdown;
+import io.github.connortron110.scplockdown.level.items.SCPItem;
 import io.github.connortron110.scplockdown.registration.SCPItems;
 import io.github.connortron110.scplockdown.registration.SCPTags;
 import net.minecraft.core.HolderLookup;
@@ -28,6 +29,12 @@ public class LockdownItemTagsProvider extends ItemTagsProvider {
 		copy(BlockTags.PLANKS, ItemTags.PLANKS);
 		copy(BlockTags.LEAVES, ItemTags.LEAVES);
 		copy(BlockTags.SAPLINGS, ItemTags.SAPLINGS);
+
+		tag(ItemTags.SWORDS).add(SCPItems.SCP143_SWORD.get(), SCPItems.SCP148_SWORD.get());
+		tag(ItemTags.AXES).add(SCPItems.SCP143_AXE.get(), SCPItems.SCP148_AXE.get());
+		tag(ItemTags.PICKAXES).add(SCPItems.SCP143_PICKAXE.get(), SCPItems.SCP148_PICKAXE.get());
+		tag(ItemTags.SHOVELS).add(SCPItems.SCP143_SHOVEL.get(), SCPItems.SCP148_SHOVEL.get());
+		tag(ItemTags.HOES).add(SCPItems.SCP143_HOE.get(), SCPItems.SCP148_HOE.get());
 
 		//Forge
 		copy(Tags.Blocks.ORES, Tags.Items.ORES);
