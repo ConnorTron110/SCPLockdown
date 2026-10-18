@@ -1,4 +1,4 @@
-# 3.0.0-26w
+# 3.0.0-26w42a
 - Added tool tags to exising tools
 - Fixed server side crashes that involved packets that were client bound
 - Added SCP-173
