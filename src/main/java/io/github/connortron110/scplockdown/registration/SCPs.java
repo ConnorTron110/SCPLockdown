@@ -103,6 +103,8 @@ public class SCPs {
 						SCPItems.SCP148_HOE,
 						SCPItems.SCP148_HELMET)
 				.addBlocks(SCPBlocks.SCP148_ORE, SCPBlocks.SCP148_BLOCK));
+		register(builder("173", "The Sculpture", SCPObjectClass.EUCLID)
+				.addEntities(SCPEntities.SCP173));
 		register(builder("330", "Take Only Two", SCPObjectClass.SAFE)
 				.addBlocks(SCPBlocks.SCP330));
 		register(builder("458", "The Never-Ending Pizza Box", SCPObjectClass.SAFE)
@@ -113,8 +115,6 @@ public class SCPs {
 				.addBlocks(SCPBlocks.SCP822));
 		register(builder("902", "The Final Countdown", SCPObjectClass.KETER)
 				.addBlocks(SCPBlocks.SCP902));
-		register(builder("173", "The Sculpture", SCPObjectClass.EUCLID)
-				.addEntities(SCPEntities.SCP173));
 		register(builder("914", "The Clockworks", SCPObjectClass.SAFE)
 				.addBlocks(SCPBlocks.SCP914, SCPBlocks.SCP914_METAL, SCPBlocks.SCP914_GEARS));
 		register(builder("939", "With Many Voices", SCPObjectClass.KETER)
