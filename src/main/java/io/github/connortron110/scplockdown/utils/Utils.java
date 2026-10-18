@@ -95,12 +95,14 @@ public final class Utils {
 	}
 
 	/**
-	 * @param targetEntity
-	 * @param observerEntity
+	 * Test to see if entities can see each other by means of world occlusion.
+	 *
+	 * @param targetEntity The entity we want to check if is obstructed from the observerEntity.
+	 * @param observerEntity The entity looking towards the targetEntity to see if it is obstructed from it.
 	 * @return True if view is obstructed
 	 */
 	public static boolean isViewBetweenEntitiesObstructed(Entity targetEntity, Entity observerEntity, boolean includeFluids) {
-		Vec3 targetVector = targetEntity.getEyePosition(1).add(0, targetEntity.getDimensions(Pose.STANDING).height / 2, 0);
+		Vec3 targetVector = targetEntity.position().add(0, targetEntity.getDimensions(Pose.STANDING).height / 2, 0);
 		BlockHitResult result = targetEntity.level().clip(new ClipContext(observerEntity.getEyePosition(1), targetVector, ClipContext.Block.OUTLINE, includeFluids ? ClipContext.Fluid.ANY : ClipContext.Fluid.NONE, targetEntity));
 		return result.getType() == HitResult.Type.BLOCK;
 	}
