@@ -1,19 +1,15 @@
 package io.github.connortron110.scplockdown.network.client;
 
-import io.github.connortron110.scplockdown.events.ClientEvents;
+import io.github.connortron110.scplockdown.network.ClientPacketHandler;
 import io.github.connortron110.scplockdown.network.ISCPPacket;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class CBConfusePlayerInput implements ISCPPacket {
-
-	private final boolean confuseInput;
-
-	public CBConfusePlayerInput(boolean confuseInput) {
-		this.confuseInput = confuseInput;
-	}
+public record CBConfusePlayerInput(boolean confuseInput) implements ISCPPacket {
 
 	@SuppressWarnings("unused")
 	public CBConfusePlayerInput(FriendlyByteBuf buffer) {
@@ -28,7 +24,7 @@ public class CBConfusePlayerInput implements ISCPPacket {
 	@Override
 	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> ClientEvents.shouldConfuseInput = confuseInput);
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleConfusePlayerInput(this)));
 		return true;
 	}
 }

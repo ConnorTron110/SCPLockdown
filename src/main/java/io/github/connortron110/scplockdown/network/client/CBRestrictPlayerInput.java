@@ -1,8 +1,10 @@
 package io.github.connortron110.scplockdown.network.client;
 
-import io.github.connortron110.scplockdown.events.ClientEvents;
+import io.github.connortron110.scplockdown.network.ClientPacketHandler;
 import io.github.connortron110.scplockdown.network.ISCPPacket;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -10,13 +12,7 @@ import java.util.function.Supplier;
 /**
  * Used to stop player movement input from being registered, making the player unable to move.
  */
-public class CBRestrictPlayerInput implements ISCPPacket {
-
-	private final boolean restrictInput;
-
-	public CBRestrictPlayerInput(boolean restrictInput) {
-		this.restrictInput = restrictInput;
-	}
+public record CBRestrictPlayerInput(boolean restrictInput) implements ISCPPacket {
 
 	@SuppressWarnings("unused")
 	public CBRestrictPlayerInput(FriendlyByteBuf buffer) {
@@ -31,7 +27,7 @@ public class CBRestrictPlayerInput implements ISCPPacket {
 	@Override
 	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> ClientEvents.shouldCancelInput = restrictInput);
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleRestrictPlayerInput(this)));
 		return true;
 	}
 }

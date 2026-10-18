@@ -1,27 +1,16 @@
 package io.github.connortron110.scplockdown.network.client;
 
-import io.github.connortron110.scplockdown.level.blocks.SCP330Block;
+import io.github.connortron110.scplockdown.network.ClientPacketHandler;
 import io.github.connortron110.scplockdown.network.ISCPPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class CBSCP330Sync implements ISCPPacket {
-
-	private final UUID PlayerUUID;
-	private final int CandiesTaken;
-	private final long CandiesTimeTaken;
-
-	public CBSCP330Sync(UUID playerUUID, int candiesTaken, long CandiesTimeTaken) {
-		this.PlayerUUID = playerUUID;
-		this.CandiesTaken = candiesTaken;
-		this.CandiesTimeTaken = CandiesTimeTaken;
-	}
+public record CBSCP330Sync(UUID PlayerUUID, int CandiesTaken, long CandiesTimeTaken) implements ISCPPacket {
 
 	@SuppressWarnings("unused")
 	public CBSCP330Sync(FriendlyByteBuf buffer) {
@@ -38,13 +27,7 @@ public class CBSCP330Sync implements ISCPPacket {
 	@Override
 	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> {
-			Optional<AbstractClientPlayer> targetPlayer = Minecraft.getInstance().level.players().stream().filter(player -> player.getUUID().equals(PlayerUUID)).findFirst();
-			if (targetPlayer.isPresent()) {
-				targetPlayer.get().getPersistentData().putInt(SCP330Block.CANDIES_KEY, this.CandiesTaken);
-				targetPlayer.get().getPersistentData().putLong(SCP330Block.CANDIES_TIME_KEY, this.CandiesTimeTaken);
-			}
-		});
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleSCP330Sync(this)));
 		return true;
 	}
 }

@@ -1,22 +1,15 @@
 package io.github.connortron110.scplockdown.network.client;
 
+import io.github.connortron110.scplockdown.network.ClientPacketHandler;
 import io.github.connortron110.scplockdown.network.ISCPPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class CBPlayerMovementSync implements ISCPPacket {
-
-	private final float aX;
-	private final float aZ;
-
-	public CBPlayerMovementSync(float aX, float aZ) {
-		this.aX = aX;
-		this.aZ = aZ;
-	}
+public record CBPlayerMovementSync(float aX, float aZ) implements ISCPPacket {
 
 	@SuppressWarnings("unused")
 	public CBPlayerMovementSync(FriendlyByteBuf buffer) {
@@ -32,12 +25,7 @@ public class CBPlayerMovementSync implements ISCPPacket {
 	@Override
 	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> {
-			LocalPlayer player = Minecraft.getInstance().player;
-			player.xxa = aX;
-			player.zza = aZ;
-			player.setDeltaMovement(player.getDeltaMovement().add(aX, 0, aZ));
-		});
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handlePlayerMovementSync(this)));
 		return true;
 	}
 }

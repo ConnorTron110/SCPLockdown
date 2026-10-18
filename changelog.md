@@ -1,3 +1,7 @@
+# 3.0.0-26w
+- Added tool tags to exising tools
+- Fixed server side crashes that involved packets that were client bound
+
 # 3.0.0-26w41b
 - Fixed Geckolib compatibility issue
 

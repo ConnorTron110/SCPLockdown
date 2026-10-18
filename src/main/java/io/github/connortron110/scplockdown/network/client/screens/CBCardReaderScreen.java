@@ -1,10 +1,12 @@
 package io.github.connortron110.scplockdown.network.client.screens;
 
-import io.github.connortron110.scplockdown.client.ClientScreenOpener;
 import io.github.connortron110.scplockdown.level.items.KeycardItem;
+import io.github.connortron110.scplockdown.network.ClientPacketHandler;
 import io.github.connortron110.scplockdown.network.ISCPPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
@@ -13,8 +15,8 @@ import java.util.function.Supplier;
 
 public class CBCardReaderScreen implements ISCPPacket {
 
-	private final BlockPos pos;
-	private final List<KeycardItem.Data> linkedCards;
+	public final BlockPos pos;
+	public final List<KeycardItem.Data> linkedCards;
 
 	public CBCardReaderScreen(BlockPos pos, List<KeycardItem.Data> linkedCards) {
 		this.pos = pos;
@@ -40,7 +42,7 @@ public class CBCardReaderScreen implements ISCPPacket {
 	@Override
 	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> ClientScreenOpener.openCardReaderScreen(pos, linkedCards));
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleCardReaderScreen(this)));
 		return true;
 	}
 }

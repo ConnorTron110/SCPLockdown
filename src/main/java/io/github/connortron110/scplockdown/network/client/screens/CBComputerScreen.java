@@ -1,20 +1,16 @@
 package io.github.connortron110.scplockdown.network.client.screens;
 
-import io.github.connortron110.scplockdown.client.ClientScreenOpener;
+import io.github.connortron110.scplockdown.network.ClientPacketHandler;
 import io.github.connortron110.scplockdown.network.ISCPPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class CBComputerScreen implements ISCPPacket {
-
-	private final BlockPos pos;
-
-	public CBComputerScreen(BlockPos pos) {
-		this.pos = pos;
-	}
+public record CBComputerScreen(BlockPos pos) implements ISCPPacket {
 
 	@SuppressWarnings("unused")
 	public CBComputerScreen(FriendlyByteBuf buffer) {
@@ -29,7 +25,7 @@ public class CBComputerScreen implements ISCPPacket {
 	@Override
 	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> ClientScreenOpener.openComputerScreen(pos));
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleComputerScreen(this)));
 		return true;
 	}
 }
