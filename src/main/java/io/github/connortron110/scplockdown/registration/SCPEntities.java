@@ -68,6 +68,8 @@ public class SCPEntities {
 
 	//public static final RegistryObject<EntityType<SCP053Entity>> SCP053 = registerWithEgg("scp053", 0xded660, 0xd9b69c, EntityType.Builder.of(SCP053Entity::new, MobCategory.CREATURE).sized(0.4F, 1F));
 
+	public static final RegistryObject<EntityType<SCP173Entity>> SCP173 = registerWithEgg("scp173", 0xddcab1, 0x98ac74, EntityType.Builder.of(SCP173Entity::new, MobCategory.MONSTER).sized(0.85F, 3.1F));
+
 	public static final RegistryObject<EntityType<SCP939Entity>> SCP939 = registerWithEgg("scp939", 0x500602, 0x930c05, EntityType.Builder.of(SCP939Entity::new, MobCategory.MONSTER).sized(1.3F, 1.75F));
 
 	@SubscribeEvent
@@ -103,6 +105,8 @@ public class SCPEntities {
 		e.put(SCP049_PLAYER.get(), createMonsterAttributes(25, 0.18, 3.5, 0).build());
 
 		//e.put(SCP053.get(), createMonsterAttributes(10, 0.2, 0, 0).build());
+
+		e.put(SCP173.get(), createMonsterAttributes(40, 0.3, 99, 5).build());
 
 		e.put(SCP939.get(), createMonsterAttributes(40, 0.3, 10, 1).build());
 	}

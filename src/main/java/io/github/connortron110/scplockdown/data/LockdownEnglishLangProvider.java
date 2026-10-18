@@ -175,6 +175,8 @@ public class LockdownEnglishLangProvider extends LanguageProvider {
 
 			//addEntity(SCPEntities.SCP053, "SCP-053 Young Girl");
 
+			addEntity(SCPEntities.SCP173, "SCP-173 The Sculpture");
+
 			addEntity(SCPEntities.SCP939, "SCP-939 With Many Voices");
 		}
 

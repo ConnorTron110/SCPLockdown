@@ -20,8 +20,13 @@ public class SCPSounds {
 	public static final RegistryObject<SoundEvent> BLAST_DOOR_OPEN = register("blast_door_open");
 	public static final RegistryObject<SoundEvent> BLAST_DOOR_CLOSE = register("blast_door_close");
 	public static final RegistryObject<SoundEvent> CLOCK_TICKING = register("clockticking");
+	public static final RegistryObject<SoundEvent> NECK_SNAP = register("neck_snap");
 
 	public static final RegistryObject<SoundEvent> SCP009_SPREAD = register("scp009_spread");
+
+	public static final RegistryObject<SoundEvent> SCP173_STEP = register("scp173_step");
+	public static final RegistryObject<SoundEvent> SCP173_HURT = register("scp173_hurt");
+	public static final RegistryObject<SoundEvent> SCP173_DEATH = register("scp173_death");
 
 	public static final RegistryObject<SoundEvent> SCP914_REFINING_START = register("scp914_refining_start");
 	public static final RegistryObject<SoundEvent> SCP914_REFINING = register("scp914_refining");

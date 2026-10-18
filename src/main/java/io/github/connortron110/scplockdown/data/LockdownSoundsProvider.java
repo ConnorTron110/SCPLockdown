@@ -31,8 +31,13 @@ public class LockdownSoundsProvider extends SoundDefinitionsProvider {
 		add(SCPSounds.BLAST_DOOR_OPEN, new ModSoundDefinition().sound("blast_door_open", 3));
 		add(SCPSounds.BLAST_DOOR_CLOSE, new ModSoundDefinition().sound("blast_door_close", 3));
 		add(SCPSounds.CLOCK_TICKING, new ModSoundDefinition().sound("clockticking"));
+		add(SCPSounds.NECK_SNAP, new ModSoundDefinition().sound("neck_snap", 3));
 
 		add(SCPSounds.SCP009_SPREAD, new ModSoundDefinition().sound("scp009_spread"));
+
+		add(SCPSounds.SCP173_STEP, new ModSoundDefinition().sound("scp173_step", 3));
+		add(SCPSounds.SCP173_HURT, new ModSoundDefinition().sound("scp173_hurt"));
+		add(SCPSounds.SCP173_DEATH, new ModSoundDefinition().sound("scp173_death"));
 
 		add(SCPSounds.SCP914_REFINING_START, new ModSoundDefinition().sound("scp914_refining_start"));
 		add(SCPSounds.SCP914_REFINING, new ModSoundDefinition().sound("scp914_refining"));

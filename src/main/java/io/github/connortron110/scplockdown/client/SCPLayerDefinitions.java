@@ -46,6 +46,7 @@ public class SCPLayerDefinitions {
 	public static final ModelLayerLocation SCP035_MASK = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp035_mask"), "main");
 	public static final ModelLayerLocation SCP049 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp049"), "main");
 	public static final ModelLayerLocation SCP053 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp053"), "main");
+	public static final ModelLayerLocation SCP173 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp173"), "main");
 	public static final ModelLayerLocation SCP939 = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "scp939"), "main");
 
 	@SubscribeEvent
@@ -66,6 +67,7 @@ public class SCPLayerDefinitions {
 		event.registerLayerDefinition(SCP035_MASK, SCP035MaskModel::createBodyLayer);
 		event.registerLayerDefinition(SCP049, SCP049Model::createBodyLayer);
 		event.registerLayerDefinition(SCP053, SCP053Model::createBodyLayer);
+		event.registerLayerDefinition(SCP173, SCP173Model::createBodyLayer);
 		event.registerLayerDefinition(SCP939, SCP939Model::createBodyLayer);
 	}
 
@@ -122,6 +124,8 @@ public class SCPLayerDefinitions {
 
 		//  FIXME Model is upside down
 		//event.registerEntityRenderer(SCPEntities.SCP053.get(), context -> genericEntityRenderer(context, new SCP053Model<>(context.bakeLayer(SCPLayerDefinitions.SCP053)), 0.2F, "textures/entity/scp053.png"));
+
+		event.registerEntityRenderer(SCPEntities.SCP173.get(), context -> genericEntityRenderer(context, new SCP173Model<>(context.bakeLayer(SCPLayerDefinitions.SCP173)), 0.6F, "textures/entity/scp173.png"));
 
 		event.registerEntityRenderer(SCPEntities.SCP939.get(), context -> genericEntityRenderer(context, new SCP939Model<>(context.bakeLayer(SCPLayerDefinitions.SCP939)), 1.0F, "textures/entity/scp939.png"));
 	}

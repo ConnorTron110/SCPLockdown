@@ -68,6 +68,8 @@ public class LockdownEntityLootTables extends EntityLootSubProvider {
 
 		//add(SCPEntities.SCP053.get(), LootTable.lootTable());
 
+		add(SCPEntities.SCP173.get(), LootTable.lootTable());
+
 		add(SCPEntities.SCP939.get(), LootTable.lootTable());
 
 		//CompoundTag var0 = new CompoundNBT(); var0.putInt("Variant", 0);
