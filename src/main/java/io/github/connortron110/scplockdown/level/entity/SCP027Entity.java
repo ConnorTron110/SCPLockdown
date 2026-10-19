@@ -12,7 +12,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 
 import javax.annotation.Nullable;
 
-public class SCP027Entity extends AbstractHumanEntity implements IRequirePersistence {
+public class SCP027Entity extends AbstractHumanEntity {
 	public SCP027Entity(EntityType<? extends AbstractHumanEntity> type, Level level) {
 		super(type, level);
 	}

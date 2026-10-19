@@ -1,3 +1,6 @@
+# 3.0.0-26w
+- Made all humans require persistence.
+
 # 3.0.0-26w42b
 - Fixed EntityObstructedCheck failing when in an enclosed space (fixes SCP-173 moving in low ceiling enviroments).
 

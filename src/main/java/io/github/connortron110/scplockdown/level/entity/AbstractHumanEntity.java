@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public abstract class AbstractHumanEntity extends PathfinderMob {
+public abstract class AbstractHumanEntity extends PathfinderMob implements IRequirePersistence {
 	protected AbstractHumanEntity(EntityType<? extends PathfinderMob> type, Level level) {
 		super(type, level);
 	}
