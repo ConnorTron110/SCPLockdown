@@ -56,6 +56,16 @@ public class LockdownEntityTagsProvider extends EntityTypeTagsProvider {
 		tag(SCPTags.Entity.SCP027_VERMIN_EPIC)  //TODO add Shadowspider
 				.add(EntityType.ENDERMITE);
 
+		tag(SCPTags.Entity.SCP173_TARGET)
+				.add(EntityType.PLAYER)
+				.add(EntityType.VILLAGER)
+				.add(EntityType.EVOKER)
+				.add(EntityType.PILLAGER)
+				.add(EntityType.VINDICATOR)
+				.add(EntityType.ILLUSIONER)
+				.add(EntityType.WITCH)
+				.add(SCPEntities.GUARD.get());
+
 		//Generification tags to help with further tags and quickly identifying different types of entities
 		//These will never have to be touched again as its mostly Vanilla things
 		tag(SCPTags.Entity.ANIMALS) //TODO Decide if Commented out entities should be in this tag (if not at least separate tags)

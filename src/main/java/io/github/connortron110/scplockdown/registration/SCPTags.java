@@ -11,14 +11,19 @@ import net.minecraft.world.level.material.Fluid;
 public class SCPTags {
 	public static class Entity {
 
-		public static final TagKey<EntityType<?>> SCP008_INFECTABLE = createTag("scp008_infectable"); //Entities that can get infected and convert to instances of 008
-		public static final TagKey<EntityType<?>> SCP008_ATTACKING = createTag("scp008_attacking"); //Entities that have this tag will have SCP-008-1 instances as targets (Mixin'd)
-		public static final TagKey<EntityType<?>> SCP008_FLEEING = createTag("scp008_fleeing"); //Entities that have this tag will flee from SCP-008-1 instances (Mixin'd)
+		public static final TagKey<EntityType<?>> SCP008_INFECTABLE = createTag("scp008_infectable");	//	Entities that can get infected and convert to instances of 008
+		public static final TagKey<EntityType<?>> SCP008_ATTACKING = createTag("scp008_attacking");	//	Entities that have this tag will have SCP-008-1 instances as targets (Mixin'd)
+		public static final TagKey<EntityType<?>> SCP008_FLEEING = createTag("scp008_fleeing");		//	Entities that have this tag will flee from SCP-008-1 instances (Mixin'd)
 
 		public static final TagKey<EntityType<?>> SCP027_VERMIN_COMMON = createTag("scp027_vermin_common");
 		public static final TagKey<EntityType<?>> SCP027_VERMIN_UNCOMMON = createTag("scp027_vermin_uncommon");
 		public static final TagKey<EntityType<?>> SCP027_VERMIN_RARE = createTag("scp027_vermin_rare");
 		public static final TagKey<EntityType<?>> SCP027_VERMIN_EPIC = createTag("scp027_vermin_epic");
+
+		/**
+		 * Targetable by SCP-173
+		 */
+		public static final TagKey<EntityType<?>> SCP173_TARGET = createTag("scp173_target");
 
 		//Generic Identifying tags (Will expand on this)
 		public static final TagKey<EntityType<?>> ANIMALS = createTag("animals"); //Entities that can be classified as animals

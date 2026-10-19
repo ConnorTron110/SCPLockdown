@@ -2,6 +2,7 @@ package io.github.connortron110.scplockdown.level.entity;
 
 import io.github.connortron110.scplockdown.level.entity.ai.goal.SCP173MeleeAttackGoal;
 import io.github.connortron110.scplockdown.registration.SCPSounds;
+import io.github.connortron110.scplockdown.registration.SCPTags;
 import io.github.connortron110.scplockdown.utils.Utils;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -70,7 +71,7 @@ public class SCP173Entity extends Monster implements IRequirePersistence {
 		this.goalSelector.addGoal(0, new SCP173MeleeAttackGoal(this, 1F, false));
 		this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1, 0.000001F));
 		this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
-		this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
+		this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, livingEntity -> EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity) && livingEntity.getType().is(SCPTags.Entity.SCP173_TARGET)));
 	}
 
 	@Override
