@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import io.github.connortron110.scplockdown.SCPLockdown;
 import io.github.connortron110.scplockdown.level.inventory.CardWriterMenu;
 import io.github.connortron110.scplockdown.level.items.KeycardItem;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.server.screens.SBCardWriterScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Objects;
 
@@ -199,7 +199,7 @@ public class CardWriterScreen extends AbstractContainerScreen<CardWriterMenu> {
 		} catch (NumberFormatException ignored) {
 		}
 
-		SCPNetwork.NETWORK.sendToServer(new SBCardWriterScreen(menu.containerId, KeycardItem.setKeycardValues(menu.getItemInCardSlot(), Name.getValue(), colour, SecretKey.getValue())));
+		PacketDistributor.sendToServer(new SBCardWriterScreen(menu.containerId, KeycardItem.setKeycardValues(menu.getItemInCardSlot(), Name.getValue(), colour, SecretKey.getValue())));
 	}
 
 	@Override

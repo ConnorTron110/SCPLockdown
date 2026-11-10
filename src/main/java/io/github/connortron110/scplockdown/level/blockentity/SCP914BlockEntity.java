@@ -3,7 +3,6 @@ package io.github.connortron110.scplockdown.level.blockentity;
 import io.github.connortron110.scplockdown.LockdownConfig;
 import io.github.connortron110.scplockdown.level.blocks.SlidingDoorBlock;
 import io.github.connortron110.scplockdown.level.recipe.SCP914Recipe;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.CBSCP914Refining;
 import io.github.connortron110.scplockdown.registration.SCPBlockEntities;
 import io.github.connortron110.scplockdown.registration.SCPSounds;
@@ -17,6 +16,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -30,7 +30,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.compress.utils.Lists;
 
 import javax.annotation.Nullable;
@@ -203,7 +203,7 @@ public class SCP914BlockEntity extends BlockEntity {
 							CraftingTime = STOP_TIME + 1;
 					}
 
-					SCPNetwork.NETWORK.send(PacketDistributor.DIMENSION.with(() -> level.dimension()), new CBSCP914Refining(getBlockPos(), CraftingTime));
+					PacketDistributor.sendToPlayersInDimension((ServerLevel) level, new CBSCP914Refining(getBlockPos(), CraftingTime));
 				}
 			}
 

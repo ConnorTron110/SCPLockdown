@@ -1,7 +1,6 @@
 package io.github.connortron110.scplockdown.level.blocks;
 
 import io.github.connortron110.scplockdown.level.blockentity.ComputerBlockEntity;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.screens.CBComputerScreen;
 import io.github.connortron110.scplockdown.registration.SCPBlockEntities;
 import io.github.connortron110.scplockdown.registration.SCPBlocks;
@@ -23,7 +22,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -56,7 +55,7 @@ public class ComputerBlock extends LockdownHorizontalBlock implements EntityBloc
 					player.sendSystemMessage(computer.getText());
 				} else {
 					if (player instanceof ServerPlayer serverPlayer) {
-						SCPNetwork.NETWORK.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new CBComputerScreen(pos));
+						PacketDistributor.sendToPlayer(serverPlayer, new CBComputerScreen(pos));
 					}
 				}
 			}

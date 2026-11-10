@@ -3,7 +3,6 @@ package io.github.connortron110.scplockdown.level.blockentity;
 import com.google.common.collect.Lists;
 import io.github.connortron110.scplockdown.level.blocks.CardReaderBlock;
 import io.github.connortron110.scplockdown.level.items.KeycardItem;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.screens.CBCardReaderScreen;
 import io.github.connortron110.scplockdown.registration.SCPBlockEntities;
 import io.github.connortron110.scplockdown.registration.SCPSounds;
@@ -19,7 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -157,6 +156,6 @@ public class CardReaderBlockEntity extends BlockEntity {
 	}
 
 	public void openProgrammingScreen(ServerPlayer player) {
-		SCPNetwork.NETWORK.send(PacketDistributor.PLAYER.with(() -> player), new CBCardReaderScreen(getBlockPos(), LinkedCards));
+		PacketDistributor.sendToPlayer(player, new CBCardReaderScreen(getBlockPos(), LinkedCards));
 	}
 }

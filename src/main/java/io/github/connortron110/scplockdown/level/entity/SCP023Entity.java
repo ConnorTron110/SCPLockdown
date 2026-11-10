@@ -2,7 +2,6 @@ package io.github.connortron110.scplockdown.level.entity;
 
 import io.github.connortron110.scplockdown.events.hooks.IDislikeBeingObserved;
 import io.github.connortron110.scplockdown.level.effect.SCP023Effect;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.CBSCP023Howl;
 import io.github.connortron110.scplockdown.registration.SCPEffects;
 import io.github.connortron110.scplockdown.utils.LockdownTextComponents;
@@ -23,7 +22,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -62,7 +61,7 @@ public class SCP023Entity extends Monster implements IRequirePersistence, IDisli
 		super.setTarget(target);
 		if (!hasHowledForTarget && target != null) {
 			hasHowledForTarget = true;
-			SCPNetwork.NETWORK.send(PacketDistributor.NEAR.with(() -> PacketDistributor.TargetPoint.p(getX(), getY(), getZ(), 64, level().dimension()).get()), new CBSCP023Howl(this));
+			PacketDistributor.sendToPlayersTrackingEntity(this, new CBSCP023Howl(getId()));
 		} else if (target == null) {
 			hasHowledForTarget = false;
 		}

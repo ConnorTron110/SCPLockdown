@@ -8,64 +8,35 @@ import io.github.connortron110.scplockdown.network.client.screens.CBComputerScre
 import io.github.connortron110.scplockdown.network.server.screens.SBCardReaderScreen;
 import io.github.connortron110.scplockdown.network.server.screens.SBCardWriterScreen;
 import io.github.connortron110.scplockdown.network.server.screens.SBComputerScreen;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-import java.lang.reflect.InvocationTargetException;
-
-@Mod.EventBusSubscriber(modid = SCPLockdown.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = SCPLockdown.MOD_ID)
 public class SCPNetwork {
 
 	private static final String NETWORK_VERSION = "0.0.1";
-	public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "network")
-			, () -> NETWORK_VERSION, NETWORK_VERSION::equals, NETWORK_VERSION::equals);
 
 	@SubscribeEvent
-	public static void networkSetup(FMLCommonSetupEvent event) {
-		registerPacket(CBPlayerMovementSync.class, NetworkDirection.PLAY_TO_CLIENT);
-		registerPacket(CBRestrictPlayerInput.class, NetworkDirection.PLAY_TO_CLIENT);
-		registerPacket(CBConfusePlayerInput.class, NetworkDirection.PLAY_TO_CLIENT);
+	public static void registerPackets(final RegisterPayloadHandlersEvent event) {
+		final PayloadRegistrar registrar = event.registrar(NETWORK_VERSION);
 
-		registerPacket(CBLureDebugSync.class, NetworkDirection.PLAY_TO_CLIENT);
+		//	Client Bound
+		registrar.playToClient(CBLureDebugSync.TYPE, CBLureDebugSync.STREAM_CODEC, ClientPacketHandler::lureDebugSync);
+		registrar.playToClient(CBCardReaderScreen.TYPE, CBCardReaderScreen.STREAM_CODEC, ClientPacketHandler::handleCardReaderScreen);
+		registrar.playToClient(CBComputerScreen.TYPE, CBComputerScreen.STREAM_CODEC, ClientPacketHandler::handleComputerScreen);
+		registrar.playToClient(CBCameraShake.TYPE, CBCameraShake.STREAM_CODEC, ClientPacketHandler::handleCameraShake);
+		registrar.playToClient(CBConfusePlayerInput.TYPE, CBConfusePlayerInput.STREAM_CODEC, ClientPacketHandler::handleConfusePlayerInput);
+		registrar.playToClient(CBPlayerMovementSync.TYPE, CBPlayerMovementSync.STREAM_CODEC, ClientPacketHandler::handlePlayerMovementSync);
+		registrar.playToClient(CBRestrictPlayerInput.TYPE, CBRestrictPlayerInput.STREAM_CODEC, ClientPacketHandler::handleRestrictPlayerInput);
+		registrar.playToClient(CBSCP023Howl.TYPE, CBSCP023Howl.STREAM_CODEC, ClientPacketHandler::handleSCP023Howl);
+		registrar.playToClient(CBSCP330Sync.TYPE, CBSCP330Sync.STREAM_CODEC, ClientPacketHandler::handleSCP330Sync);
+		registrar.playToClient(CBSCP914Refining.TYPE, CBSCP914Refining.STREAM_CODEC, ClientPacketHandler::handleSCP914Refining);
 
-		registerPacket(CBComputerScreen.class, NetworkDirection.PLAY_TO_CLIENT);
-		registerPacket(SBComputerScreen.class, NetworkDirection.PLAY_TO_SERVER);
-
-		registerPacket(CBCardReaderScreen.class, NetworkDirection.PLAY_TO_CLIENT);
-		registerPacket(SBCardReaderScreen.class, NetworkDirection.PLAY_TO_SERVER);
-
-		registerPacket(SBCardWriterScreen.class, NetworkDirection.PLAY_TO_SERVER);
-
-		registerPacket(CBCameraShake.class, NetworkDirection.PLAY_TO_CLIENT);
-
-		registerPacket(CBSCP023Howl.class, NetworkDirection.PLAY_TO_CLIENT);
-		registerPacket(CBSCP330Sync.class, NetworkDirection.PLAY_TO_CLIENT);
-		registerPacket(CBSCP914Refining.class, NetworkDirection.PLAY_TO_CLIENT);
-	}
-
-	private static int id = 0;
-
-	private static <MSG extends ISCPPacket> void registerPacket(Class<MSG> packetClass, NetworkDirection networkDirection) {
-		SimpleChannel.MessageBuilder<MSG> builder = NETWORK.messageBuilder(packetClass, id++, networkDirection);
-		builder.encoder(ISCPPacket::encode);
-		builder.decoder(packetBuffer -> {
-			try {
-				return packetClass.getConstructor(FriendlyByteBuf.class).newInstance(packetBuffer);
-			} catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-			         InvocationTargetException e) {
-				//  In Theory these should NEVER catch, and if it does, that should indicate faulty system and or installation
-				SCPLockdown.LOGGER.error("An Error occurred on {} Packet", packetClass.getName());
-				SCPLockdown.LOGGER.error("Either there is no decoder or some unexpected error happened");
-				throw new RuntimeException(e);
-			}
-		});
-		builder.consumerNetworkThread(ISCPPacket::consume);
-		builder.add();
+		//	Server Bound
+		registrar.playToServer(SBCardReaderScreen.TYPE, SBCardReaderScreen.STREAM_CODEC, ServerPacketHandler::handleCardReaderScreen);
+		registrar.playToServer(SBCardWriterScreen.TYPE, SBCardWriterScreen.STREAM_CODEC, ServerPacketHandler::handleCardWriterScreen);
+		registrar.playToServer(SBComputerScreen.TYPE, SBComputerScreen.STREAM_CODEC, ServerPacketHandler::handleComputerScreen);
 	}
 }

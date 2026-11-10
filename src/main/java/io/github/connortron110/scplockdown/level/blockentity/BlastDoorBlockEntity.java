@@ -2,16 +2,16 @@ package io.github.connortron110.scplockdown.level.blockentity;
 
 import io.github.connortron110.scplockdown.level.blocks.BlastDoorBlock;
 import io.github.connortron110.scplockdown.level.blocks.SlidingDoorBlock;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.CBCameraShake;
 import io.github.connortron110.scplockdown.registration.SCPBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class BlastDoorBlockEntity extends BlockEntity {
 
@@ -49,7 +49,7 @@ public class BlastDoorBlockEntity extends BlockEntity {
 			if (openProgress == MAX_OPEN || openProgress == 0) {
 				shouldShakeCamera = false;
 				if (!level.isClientSide) {
-					SCPNetwork.NETWORK.send(PacketDistributor.NEAR.with(() -> PacketDistributor.TargetPoint.p(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 5, level.dimension()).get()), new CBCameraShake(0.5F, 20));
+					PacketDistributor.sendToPlayersNear((ServerLevel) level, null, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 5, new CBCameraShake(0.5F, 20));
 				}
 			}
 		} else {

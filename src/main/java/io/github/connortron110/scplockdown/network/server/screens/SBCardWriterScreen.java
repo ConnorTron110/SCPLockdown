@@ -1,47 +1,28 @@
 package io.github.connortron110.scplockdown.network.server.screens;
 
-import io.github.connortron110.scplockdown.level.inventory.CardWriterMenu;
-import io.github.connortron110.scplockdown.network.ISCPPacket;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import io.github.connortron110.scplockdown.SCPLockdown;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
+public record SBCardWriterScreen(int ContainerID, ItemStack CardStack) implements CustomPacketPayload {
 
-public class SBCardWriterScreen implements ISCPPacket {
+	public static final CustomPacketPayload.Type<SBCardWriterScreen> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "sbcardwriterscreen"));
 
-	private final int ContainerID;
-	private final ItemStack CardStack;
-
-	public SBCardWriterScreen(int containerId, ItemStack cardStack) {
-		this.ContainerID = containerId;
-		this.CardStack = cardStack;
-	}
-
-	@SuppressWarnings("unused")
-	public SBCardWriterScreen(FriendlyByteBuf buffer) {
-		this(buffer.readInt(), buffer.readItem());
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, SBCardWriterScreen> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT,
+			SBCardWriterScreen::ContainerID,
+			ItemStack.STREAM_CODEC,
+			SBCardWriterScreen::CardStack,
+			SBCardWriterScreen::new
+	);
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeInt(ContainerID);
-		buffer.writeItemStack(CardStack, false);
-	}
-
-	@Override
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
-		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> {
-			ServerPlayer sender = context.getSender();
-			AbstractContainerMenu container = sender.containerMenu;
-			if (container.containerId == this.ContainerID && container instanceof CardWriterMenu cardWriterMenu) {
-				cardWriterMenu.setItemInCardSlot(CardStack);
-				cardWriterMenu.broadcastChanges();
-			}
-		});
-		return true;
+	public @NotNull CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+		return TYPE;
 	}
 }

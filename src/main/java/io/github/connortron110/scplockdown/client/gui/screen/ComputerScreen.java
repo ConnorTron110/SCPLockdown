@@ -1,6 +1,5 @@
 package io.github.connortron110.scplockdown.client.gui.screen;
 
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.server.screens.SBComputerScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,6 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ComputerScreen extends Screen {
 
@@ -85,7 +85,7 @@ public class ComputerScreen extends Screen {
 	}
 
 	protected void onDone() {
-		SCPNetwork.NETWORK.sendToServer(new SBComputerScreen(pos, url.getValue(), display.getValue()));
+		PacketDistributor.sendToServer(new SBComputerScreen(pos, url.getValue(), display.getValue()));
 		this.minecraft.setScreen(null);
 	}
 

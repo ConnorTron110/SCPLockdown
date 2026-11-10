@@ -1,32 +1,28 @@
 package io.github.connortron110.scplockdown.network.client;
 
-import io.github.connortron110.scplockdown.network.ClientPacketHandler;
-import io.github.connortron110.scplockdown.network.ISCPPacket;
+import io.github.connortron110.scplockdown.SCPLockdown;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
+public record CBSCP914Refining(BlockPos SCP914Pos, int CraftingTime) implements CustomPacketPayload {
 
-public record CBSCP914Refining(BlockPos SCP914Pos, int CraftingTime) implements ISCPPacket {
+	public static final CustomPacketPayload.Type<CBSCP914Refining> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "cbscp914refining"));
 
-	@SuppressWarnings("unused")
-	public CBSCP914Refining(FriendlyByteBuf buffer) {
-		this(BlockPos.of(buffer.readLong()), buffer.readInt());
-	}
-
-	@Override
-	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeLong(SCP914Pos.asLong());
-		buffer.writeInt(CraftingTime);
-	}
+	public static final StreamCodec<ByteBuf, CBSCP914Refining> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC,
+			CBSCP914Refining::SCP914Pos,
+			ByteBufCodecs.INT,
+			CBSCP914Refining::CraftingTime,
+			CBSCP914Refining::new
+	);
 
 	@Override
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
-		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleSCP914Refining(this)));
-		return true;
+	public @NotNull Type<? extends CustomPacketPayload> type() {
+		return TYPE;
 	}
 }

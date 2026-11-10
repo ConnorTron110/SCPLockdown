@@ -1,33 +1,28 @@
 package io.github.connortron110.scplockdown.network.client;
 
-import io.github.connortron110.scplockdown.network.ClientPacketHandler;
-import io.github.connortron110.scplockdown.network.ISCPPacket;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import io.github.connortron110.scplockdown.SCPLockdown;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Used to stop player movement input from being registered, making the player unable to move.
  */
-public record CBRestrictPlayerInput(boolean restrictInput) implements ISCPPacket {
+public record CBRestrictPlayerInput(boolean RestrictInput) implements CustomPacketPayload {
 
-	@SuppressWarnings("unused")
-	public CBRestrictPlayerInput(FriendlyByteBuf buffer) {
-		this(buffer.readBoolean());
-	}
+	public static final CustomPacketPayload.Type<CBRestrictPlayerInput> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "cbrestrictplayerinput"));
 
-	@Override
-	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeBoolean(restrictInput);
-	}
+	public static final StreamCodec<ByteBuf, CBRestrictPlayerInput> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.BOOL,
+			CBRestrictPlayerInput::RestrictInput,
+			CBRestrictPlayerInput::new
+	);
 
 	@Override
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
-		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleRestrictPlayerInput(this)));
-		return true;
+	public @NotNull Type<? extends CustomPacketPayload> type() {
+		return TYPE;
 	}
 }

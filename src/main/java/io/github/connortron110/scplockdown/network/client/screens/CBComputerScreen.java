@@ -1,31 +1,25 @@
 package io.github.connortron110.scplockdown.network.client.screens;
 
-import io.github.connortron110.scplockdown.network.ClientPacketHandler;
-import io.github.connortron110.scplockdown.network.ISCPPacket;
+import io.github.connortron110.scplockdown.SCPLockdown;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
+public record CBComputerScreen(BlockPos Pos) implements CustomPacketPayload {
 
-public record CBComputerScreen(BlockPos pos) implements ISCPPacket {
+	public static final CustomPacketPayload.Type<CBComputerScreen> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "cbcomputerscreen"));
 
-	@SuppressWarnings("unused")
-	public CBComputerScreen(FriendlyByteBuf buffer) {
-		this(buffer.readBlockPos());
-	}
-
-	@Override
-	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeBlockPos(pos);
-	}
+	public static final StreamCodec<ByteBuf, CBComputerScreen> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC,
+			CBComputerScreen::Pos,
+			CBComputerScreen::new
+	);
 
 	@Override
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
-		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleComputerScreen(this)));
-		return true;
+	public @NotNull CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+		return TYPE;
 	}
 }

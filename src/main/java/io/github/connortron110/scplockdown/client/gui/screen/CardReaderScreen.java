@@ -2,7 +2,6 @@ package io.github.connortron110.scplockdown.client.gui.screen;
 
 import io.github.connortron110.scplockdown.SCPLockdown;
 import io.github.connortron110.scplockdown.level.items.KeycardItem;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.server.screens.SBCardReaderScreen;
 import io.github.connortron110.scplockdown.registration.SCPItems;
 import net.minecraft.client.Minecraft;
@@ -17,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -92,12 +92,12 @@ public class CardReaderScreen extends Screen {
 	}
 
 	public void onStopProgramming() {
-		SCPNetwork.NETWORK.sendToServer(new SBCardReaderScreen(ReaderPos, true, -1));
+		PacketDistributor.sendToServer(new SBCardReaderScreen(ReaderPos, true, -1));
 		onClose();
 	}
 
 	public void onDeleteEntry() {
-		SCPNetwork.NETWORK.sendToServer(new SBCardReaderScreen(ReaderPos, false, CurrentSelection));
+		PacketDistributor.sendToServer(new SBCardReaderScreen(ReaderPos, false, CurrentSelection));
 		LinkedCards.remove(CurrentSelection);
 		DeleteEntry.setFocused(false);
 

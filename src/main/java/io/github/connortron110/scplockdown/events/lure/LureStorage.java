@@ -2,13 +2,12 @@ package io.github.connortron110.scplockdown.events.lure;
 
 import io.github.connortron110.scplockdown.SCPLockdown;
 import io.github.connortron110.scplockdown.events.lure.interfaces.IBlockLurable;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.debug.CBLureDebugSync;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -48,7 +47,7 @@ public class LureStorage {
 		data.blockLureLocations.add(pos);
 		data.setDirty();
 
-		level.players().forEach(player -> SCPNetwork.NETWORK.sendTo(new CBLureDebugSync(data.blockLureLocations), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT));
+		PacketDistributor.sendToAllPlayers(new CBLureDebugSync(data.blockLureLocations));
 	}
 
 	/**
@@ -62,7 +61,7 @@ public class LureStorage {
 		data.blockLureLocations.remove(pos);
 		data.setDirty();
 
-		level.players().forEach(player -> SCPNetwork.NETWORK.sendTo(new CBLureDebugSync(data.blockLureLocations), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT));
+		PacketDistributor.sendToAllPlayers(new CBLureDebugSync(data.blockLureLocations));
 	}
 
 	//Blocks and their location

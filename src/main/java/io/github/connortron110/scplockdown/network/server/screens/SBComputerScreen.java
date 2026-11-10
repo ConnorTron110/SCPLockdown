@@ -1,47 +1,30 @@
 package io.github.connortron110.scplockdown.network.server.screens;
 
-import io.github.connortron110.scplockdown.level.blockentity.ComputerBlockEntity;
-import io.github.connortron110.scplockdown.network.ISCPPacket;
+import io.github.connortron110.scplockdown.SCPLockdown;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
+public record SBComputerScreen(BlockPos Pos, String Url, String Display) implements CustomPacketPayload {
 
-public class SBComputerScreen implements ISCPPacket {
+	public static final CustomPacketPayload.Type<SBComputerScreen> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SCPLockdown.MOD_ID, "sbcomputerscreen"));
 
-	private final BlockPos pos;
-	private final String url;
-	private final String display;
-
-	public SBComputerScreen(BlockPos pos, String url, String display) {
-		this.pos = pos;
-		this.url = url;
-		this.display = display;
-	}
-
-	@SuppressWarnings("unused")
-	public SBComputerScreen(FriendlyByteBuf buffer) {
-		this(buffer.readBlockPos(), buffer.readUtf(), buffer.readUtf());
-	}
+	public static final StreamCodec<ByteBuf, SBComputerScreen> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC,
+			SBComputerScreen::Pos,
+			ByteBufCodecs.STRING_UTF8,
+			SBComputerScreen::Url,
+			ByteBufCodecs.STRING_UTF8,
+			SBComputerScreen::Display,
+			SBComputerScreen::new
+	);
 
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeBlockPos(pos);
-		buffer.writeUtf(url);
-		buffer.writeUtf(display);
-	}
-
-	@Override
-	public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
-		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(() -> {
-			BlockEntity tileEntity = context.getSender().level().getBlockEntity(pos);
-			if (tileEntity instanceof ComputerBlockEntity) {
-				((ComputerBlockEntity) tileEntity).setData(url, display);
-			}
-		});
-		return true;
+	public @NotNull CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+		return TYPE;
 	}
 }

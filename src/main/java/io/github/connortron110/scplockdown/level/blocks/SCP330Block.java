@@ -1,7 +1,6 @@
 package io.github.connortron110.scplockdown.level.blocks;
 
 import io.github.connortron110.scplockdown.level.items.CandyItem;
-import io.github.connortron110.scplockdown.network.SCPNetwork;
 import io.github.connortron110.scplockdown.network.client.CBSCP330Sync;
 import io.github.connortron110.scplockdown.registration.SCPEffects;
 import net.minecraft.core.BlockPos;
@@ -20,7 +19,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
@@ -70,7 +69,7 @@ public class SCP330Block extends Block {
 				}
 
 				//	Sync to all clients
-				SCPNetwork.NETWORK.send(PacketDistributor.ALL.noArg(), new CBSCP330Sync(player.getUUID(), playerTag.getInt(CANDIES_KEY), playerTag.getLong(CANDIES_TIME_KEY)));
+				PacketDistributor.sendToAllPlayers(new CBSCP330Sync(player.getUUID(), playerTag.getInt(CANDIES_KEY), playerTag.getLong(CANDIES_TIME_KEY)));
 
 				if (hasPlayerTakenTooManyCandies(player)) {
 					player.addEffect(new MobEffectInstance(SCPEffects.SCP330_NOARMS.get(), -1, 0, false, false, true));
